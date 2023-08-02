@@ -26,11 +26,7 @@ class WorkoutTableViewCell: UITableViewCell {
 
     func update(with workout: Workout) {
         nameLabel.text = workout.name
-        var descriptionLabelText = ""
-//        for (index, exercise) in workout.exercises.enumerated() {
-//            descriptionLabelText += "\(exercise.sets.count)x\(exercise.sets[index].reps) \(exercise.name)\n"
-//        }
-        descriptionLabel.text = descriptionLabelText
+        descriptionLabel.text = workout.exercises.map { "\($0.sets)x\($0.reps) \($0.name)" }.joined(separator: "\n")
         iconImage.image = workout.icon
     }
 }

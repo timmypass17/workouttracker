@@ -7,8 +7,8 @@
 
 import UIKit
 
-class AddEditWorkoutTableViewController: UITableViewController {
-
+class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableViewCellDelegate {
+    
     var workout: Workout?
     var exercises: [Exercise] = []
     
@@ -25,14 +25,53 @@ class AddEditWorkoutTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        tableView.setEditing(true, animated: true)
         if let workout = workout {
             // Handle existing workout
             exercises = workout.exercises
+            title = workout.name
+            
+            self.navigationItem.rightBarButtonItem = editButtonItem
         } else {
             // Handle new workout
             exercises.append(Exercise(name: "", sets: 0, reps: 0, weight: 0))
+            
+            // Set to edit mode (i.e. Display red deletion and rearrange buttons)
+            tableView.setEditing(true, animated: true)
+            
+            // Bar buttons
+            let cancelButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action:#selector(cancelAction))
+            let saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action:#selector(saveAction))
+            self.navigationItem.leftBarButtonItem = cancelButtonItem
+            self.navigationItem.rightBarButtonItem = saveButtonItem
+            
         }
+    }
+    
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        // Set the isEditing property for each exercise based on the editing state
+        for i in 0..<exercises.count {
+            exercises[i].isEditing = editing
+        }
+        
+        let isDone = !isEditing
+        if isDone {
+            print("Is done")
+        }
+        
+        // Reload the table view to update the button's state
+        tableView.reloadData()
+        
+    }
+    
+    @objc func saveAction(sender: UIButton!) {
+      performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
+    }
+
+    
+    @objc func cancelAction(sender: UIButton!) {
+      dismiss(animated: true)
     }
 
     // MARK: - Table view data source
@@ -42,7 +81,7 @@ class AddEditWorkoutTableViewController: UITableViewController {
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        if section == 0 {
+        if section == titleTextFieldIndexPath.section {
             return 1
         }
         
@@ -64,20 +103,26 @@ class AddEditWorkoutTableViewController: UITableViewController {
             let exercise = exercises[indexPath.row]
             
             // Step 3: Configure cell
-            cell.update(with: exercise)
+            cell.update(with: exercise)  // Pass the editing state to the cell
+            cell.isCompleteButton.isHidden = tableView.isEditing
+            cell.delegate = self
             
             // Step 4: Return cell
             return cell
         }
     }
     
+    // MARK: - Section headers
+
     override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        if section == 0 {
+        if section == titleTextFieldIndexPath.section {
             return "Workout Name"
         }
         return "Exercises"
     }
     
+    // MARK: - Edit methods
+
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         return indexPath != titleTextFieldIndexPath
     }
@@ -93,6 +138,24 @@ class AddEditWorkoutTableViewController: UITableViewController {
         let movedExercise = exercises.remove(at: sourceIndexPath.row)
         exercises.insert(movedExercise, at: destinationIndexPath.row)
     }
+    
+    // MARK: - Navigation methods
+
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        // User pressed "cancel", do nothing
+        guard segue.identifier == "saveUnwind" else { return }
+        
+        // Handle saving workout to let main vc have access
+        let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
+        let name = cell.titleTextField.text!
+        if let workout = workout {
+            // Edit
+            self.workout = Workout(id: workout.id, name: name, exercises: exercises)
+        } else {
+            // Add
+            self.workout =  Workout(name: name, exercises: exercises)
+        }
+    }
 
 
     @IBAction func addExerciseButtonTapped(_ sender: Any) {
@@ -104,108 +167,14 @@ class AddEditWorkoutTableViewController: UITableViewController {
         tableView.insertRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
     }
+    
+    func exerciseCell(_ cell: ExerciseTableViewCell, didUpdateExercise exercise: Exercise) {
+        guard let indexPath = tableView.indexPath(for: cell) else { return }
+        
+        // Update model
+        exercises[indexPath.row] = exercise
+    }
+    
+    func updateSaveButtonState() {
+    }
 }
-//
-////
-////  AddEditWorkoutViewController.swift
-////  WorkoutTracker
-////
-////  Created by Timmy Nguyen on 7/28/23.
-////
-//
-//import UIKit
-//
-//class AddEditWorkoutViewController: UIViewController {
-//
-//    @IBOutlet var saveButton: UIBarButtonItem!
-//    @IBOutlet var iconImageView: UIImageView!
-//    @IBOutlet var workoutNameTextField: UITextField!
-//    @IBOutlet var exerciseTableView: UITableView!
-//
-//    var workout: Workout?
-//
-//    override func viewDidLoad() {
-//        super.viewDidLoad()
-//
-//        if let workout = workout {
-//            // Edit existing workout
-//            title = workout.name
-//        } else {
-//            // Add new workout
-//            title = "New Workout"
-//            self.workout = Workout(name: "", exercises: [])
-//        }
-//
-//        updateSaveButtonState()
-//
-//        exerciseTableView.delegate = self
-//        exerciseTableView.dataSource = self
-//    }
-//
-//    init?(coder: NSCoder, workout: Workout?) {
-//        self.workout = workout
-//        super.init(coder: coder)
-//    }
-//
-//    required init?(coder: NSCoder) {
-//        fatalError("init(coder:) has not been implemented")
-//    }
-//
-//    @IBAction func workoutNameEditingChanged(_ sender: Any) {
-//        updateIcon()
-//        updateSaveButtonState()
-//    }
-//
-//    @IBAction func addExerciseButtonTapped(_ sender: Any) {
-//        workout!.exercises.append(Exercise(name: "", sets: []))
-//
-//        let indexPath = IndexPath(row: workout!.exercises.count - 1, section: 0)
-//
-//        exerciseTableView.beginUpdates()
-//        exerciseTableView.insertRows(at: [indexPath], with: .automatic)
-//        exerciseTableView.endUpdates()
-//
-//        print(workout?.exercises)
-//    }
-//
-//    func updateIcon() {
-//        if let workoutName = workoutNameTextField.text,
-//           let inital = workoutName.first?.lowercased() {
-//            // Update icon
-//            iconImageView.image = UIImage(systemName: "\(inital).circle.fill")
-//        } else {
-//            iconImageView.image = UIImage(systemName: "p.circle.fill")
-//        }
-//    }
-//
-//    func updateSaveButtonState() {
-//        let shouldEnableSaveButton = workoutNameTextField.text?.isEmpty == false
-//
-//        saveButton.isEnabled = shouldEnableSaveButton
-//    }
-//}
-//
-//extension AddEditWorkoutViewController: UITableViewDelegate, UITableViewDataSource {
-//
-//    func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
-//    }
-//
-//    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return workout!.exercises.count
-//    }
-//
-//    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-//        // Step 1: Dequeue cell
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "ExerciseCell", for: indexPath) as! ExerciseTableViewCell
-//
-//        // Step 2: Fetch model object to display
-//        let exercise = workout!.exercises[indexPath.row]
-//
-//        // Step 3: Configure cell
-//        cell.update(with: exercise)
-//
-//        // Step 4: Return cell
-//        return cell
-//    }
-//}

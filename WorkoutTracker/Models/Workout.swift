@@ -9,6 +9,7 @@ import Foundation
 import UIKit
 
 struct Workout {
+    var id: UUID = UUID()
     var name: String
     var exercises: [Exercise]
     var icon: UIImage? {
@@ -17,6 +18,12 @@ struct Workout {
 }
 
 extension Workout: Codable { }
+
+extension Workout: Equatable {
+    static func == (lhs: Workout, rhs: Workout) -> Bool {
+        return lhs.id == rhs.id
+    }
+}
 
 extension Workout {
     static let sampleWorkouts = [

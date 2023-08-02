@@ -12,6 +12,10 @@ struct Exercise {
     var sets: Int
     var reps: Int
     var weight: Int
+    var isEditing: Bool = false
+    
+    var liftingSet: [LiftingSet] = []
+    
 }
 
 extension Exercise: Codable { }
