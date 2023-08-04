@@ -7,8 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		326BA3192A799B32005E9473 /* LiftingSet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3182A799B31005E9473 /* LiftingSet.swift */; };
 		326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */; };
+		326BA3232A7C4440005E9473 /* WorkoutLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3222A7C4440005E9473 /* WorkoutLog.swift */; };
 		326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326CCA282A70C18E00A4716C /* AppDelegate.swift */; };
 		326CCA2B2A70C18E00A4716C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326CCA2A2A70C18E00A4716C /* SceneDelegate.swift */; };
 		326CCA302A70C18E00A4716C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 326CCA2E2A70C18E00A4716C /* Main.storyboard */; };
@@ -24,8 +24,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		326BA3182A799B31005E9473 /* LiftingSet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiftingSet.swift; sourceTree = "<group>"; };
 		326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailTableViewController.swift; sourceTree = "<group>"; };
+		326BA3222A7C4440005E9473 /* WorkoutLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutLog.swift; sourceTree = "<group>"; };
 		326CCA252A70C18E00A4716C /* WorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		326CCA282A70C18E00A4716C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		326CCA2A2A70C18E00A4716C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -100,7 +100,7 @@
 			children = (
 				326CCA442A71F77C00A4716C /* Workout.swift */,
 				326CCA462A71F90F00A4716C /* Exercise.swift */,
-				326BA3182A799B31005E9473 /* LiftingSet.swift */,
+				326BA3222A7C4440005E9473 /* WorkoutLog.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -186,7 +186,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				326BA3192A799B32005E9473 /* LiftingSet.swift in Sources */,
 				326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */,
 				326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */,
 				326D023B2A75E388006EB616 /* ExerciseTableViewCell.swift in Sources */,
@@ -194,6 +193,7 @@
 				326CCA402A71E91800A4716C /* WorkoutTableViewController.swift in Sources */,
 				326CCA452A71F77C00A4716C /* Workout.swift in Sources */,
 				326CCA432A71F6D200A4716C /* WorkoutTableViewCell.swift in Sources */,
+				326BA3232A7C4440005E9473 /* WorkoutLog.swift in Sources */,
 				326CCA472A71F90F00A4716C /* Exercise.swift in Sources */,
 				326D023D2A75F32F006EB616 /* WorkoutTitleTableViewCell.swift in Sources */,
 				326D02392A75DE81006EB616 /* AddEditWorkoutTableViewController.swift in Sources */,

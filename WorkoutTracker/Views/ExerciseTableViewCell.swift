@@ -9,6 +9,8 @@ import UIKit
 
 protocol ExerciseTableViewCellDelegate: AnyObject {
     func exerciseCell(_ cell: ExerciseTableViewCell, didUpdateExercise exercise: Exercise)
+    
+    func checkmarkTapped(sender: ExerciseTableViewCell)
 }
 
 class ExerciseTableViewCell: UITableViewCell {
@@ -35,14 +37,22 @@ class ExerciseTableViewCell: UITableViewCell {
     @IBAction func textEditingChanged(_ sender: Any) {
         // Update the exercise with the new values
         let name = nameTextField.text ?? ""
-        let sets = Int(setsTextField.text ?? "0") ?? 0
-        let reps = Int(repsTextField.text ?? "0") ?? 0
-        let weight = Int(weightTextField.text ?? "0") ?? 0
-        let exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight)
+//        let sets = Int(setsTextField.text ?? "0") ?? 0
+//        let reps = Int(repsTextField.text ?? "0") ?? 0
+//        let weight = Int(weightTextField.text ?? "0") ?? 0
+        let sets = setsTextField.text ?? ""
+        let reps = repsTextField.text ?? ""
+        let weight = weightTextField.text ?? ""
+        let isCompelte = isCompleteButton.isSelected
+        let exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isCompelte)
         
         // Notify the delegate that the exercise was updated
         delegate?.exerciseCell(self, didUpdateExercise: exercise)
         
+    }
+    
+    @IBAction func completeButtonTapped(_ sender: UIButton) {
+        delegate?.checkmarkTapped(sender: self)
     }
     
     func update(with exercise: Exercise) {

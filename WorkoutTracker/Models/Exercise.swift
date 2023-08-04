@@ -9,13 +9,13 @@ import Foundation
 
 struct Exercise {
     var name: String
-    var sets: Int
-    var reps: Int
-    var weight: Int
+    var sets: String    // easier to make string to show empty placeholders for textfields
+    var reps: String
+    var weight: String
+    
+    // Cell properties
+    var isComplete: Bool = false
     var isEditing: Bool = false
-    
-    var liftingSet: [LiftingSet] = []
-    
 }
 
 extension Exercise: Codable { }

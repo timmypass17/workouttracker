@@ -8,16 +8,32 @@
 import Foundation
 import UIKit
 
-struct Workout {
+struct Workout: Codable {
     var id: UUID = UUID()
     var name: String
     var exercises: [Exercise]
     var icon: UIImage? {
         return UIImage(systemName: "\(name.first!.lowercased()).circle.fill")
     }
-}
+    
+    // Path to datastore
+    // /Documents/
+    static let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+    // /Documents/workouts.plist
+    static let archiveURL = documentsDirectory.appending(path: "workouts").appendingPathExtension("plist")
 
-extension Workout: Codable { }
+    static func loadWorkouts() -> [Workout]? {
+        guard let workouts = try? Data(contentsOf: archiveURL) else { return nil }
+        let propertyListDecoder = PropertyListDecoder()
+        return try? propertyListDecoder.decode(Array<Workout>.self, from: workouts)
+    }
+    
+    static func saveWorkouts(_ workouts: [Workout]) {
+        let propertyListEncoder = PropertyListEncoder()
+        let codedToDos = try? propertyListEncoder.encode(workouts)
+        try? codedToDos?.write(to: archiveURL, options: .noFileProtection)
+    }
+}
 
 extension Workout: Equatable {
     static func == (lhs: Workout, rhs: Workout) -> Bool {
@@ -30,11 +46,12 @@ extension Workout {
         Workout(
             name: "Leg day",
             exercises: [
-                Exercise(name: "Squat (Barbell)", sets: 3, reps: 5, weight: 135),
-                Exercise(name: "Front Squat (Barbell)", sets: 3, reps: 5, weight: 135),
-                Exercise(name: "Lunges", sets: 4, reps: 12, weight: 135),
-                Exercise(name: "Goblet Squat (Dumbell)", sets: 4, reps: 12, weight: 135)
+                Exercise(name: "Squat (Barbell)", sets: "3", reps: "5", weight: "135"),
+                Exercise(name: "Front Squat (Barbell)", sets: "3", reps: "5", weight: "135"),
+                Exercise(name: "Lunges", sets: "4", reps: "12", weight: "135"),
+                Exercise(name: "Goblet Squat (Dumbell)", sets: "4", reps: "12", weight: "135")
             ]
-        )
+        ),
+        
     ]
 }

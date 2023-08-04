@@ -7,12 +7,18 @@
 
 import UIKit
 
-class WorkoutTableViewController: UITableViewController {
+class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
     
-    var workouts: [Workout] = Workout.sampleWorkouts
+    var workouts: [Workout] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        if let savedWorkouts = Workout.loadWorkouts() {
+            workouts = savedWorkouts
+        } else {
+            workouts = Workout.sampleWorkouts
+        }
     }
     
 
@@ -46,6 +52,7 @@ class WorkoutTableViewController: UITableViewController {
         if editingStyle == .delete {
             workouts.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            Workout.saveWorkouts(workouts)
         }
     }
     
@@ -71,10 +78,13 @@ class WorkoutTableViewController: UITableViewController {
         
         let workoutToEdit = workouts[indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-        return AddEditWorkoutTableViewController(coder: coder, workout: workoutToEdit)
+        let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, workout: workoutToEdit)
+        addEditWorkoutTableViewController?.delegate = self
+        return addEditWorkoutTableViewController
         
     }
     
+    // User pressed "save" from modal screen
     @IBAction func unwindToWorkoutTableView(segue: UIStoryboardSegue) {
         // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
         guard segue.identifier == "saveUnwind",
@@ -93,8 +103,18 @@ class WorkoutTableViewController: UITableViewController {
             workouts.append(workout)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
+        
+        Workout.saveWorkouts(workouts)
     }
     
+    // User presses "back" run this code. (Doesn't run from dismissing modal)
+    func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout) {
+        if let indexOfExistingWorkout = workouts.firstIndex(of: workout) {
+            workouts[indexOfExistingWorkout] = workout
+            tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
+            Workout.saveWorkouts(workouts)
+        }
+    }
 }
 
 // Note: Ideally should deselect when user goes from main -> detail so that users can see where they come from and put this in viewdidappear but it doesnt work with modals.

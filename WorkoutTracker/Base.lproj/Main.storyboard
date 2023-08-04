@@ -195,15 +195,32 @@
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" id="XS8-4q-RFC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <button key="tableFooterView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="DGM-zq-3xi">
-                            <rect key="frame" x="0.0" y="190.66666412353516" width="390" height="44"/>
-                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            <state key="normal" title="Button"/>
-                            <buttonConfiguration key="configuration" style="plain" title="+ Add Exercise" titleAlignment="automatic"/>
-                            <connections>
-                                <action selector="addExerciseButtonTapped:" destination="6DW-bu-S0v" eventType="touchUpInside" id="sH7-PG-dTk"/>
-                            </connections>
-                        </button>
+                        <stackView key="tableFooterView" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" id="FiA-Wu-twX">
+                            <rect key="frame" x="0.0" y="190.66666412353516" width="390" height="104"/>
+                            <autoresizingMask key="autoresizingMask"/>
+                            <subviews>
+                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" id="DGM-zq-3xi">
+                                    <rect key="frame" x="0.0" y="0.0" width="390" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="plain" title="+ Add Exercise"/>
+                                    <connections>
+                                        <action selector="addExerciseButtonTapped:" destination="6DW-bu-S0v" eventType="touchUpInside" id="sH7-PG-dTk"/>
+                                    </connections>
+                                </button>
+                                <button opaque="NO" contentMode="scaleToFill" enabled="NO" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" role="primary" id="2JU-7a-IzW">
+                                    <rect key="frame" x="0.0" y="60" width="390" height="44"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                    <state key="normal" title="Button"/>
+                                    <buttonConfiguration key="configuration" style="filled" title="Finish Workout">
+                                        <backgroundConfiguration key="background" cornerRadius="0.0"/>
+                                    </buttonConfiguration>
+                                    <connections>
+                                        <action selector="finishButtonTapped:" destination="6DW-bu-S0v" eventType="touchUpInside" id="Rcj-Mj-dAo"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </stackView>
                         <prototypes>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="WorkoutTitleCell" id="hdD-FA-0ao" customClass="WorkoutTitleTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="50" width="390" height="56.333332061767578"/>
@@ -245,60 +262,67 @@
                                     <outlet property="titleTextField" destination="bHZ-NK-3dd" id="10n-N6-Ae8"/>
                                 </connections>
                             </tableViewCell>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="ExerciseCell" id="qIt-Wg-TDD" customClass="ExerciseTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExerciseCell" id="qIt-Wg-TDD" customClass="ExerciseTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="106.33333206176758" width="390" height="56.333332061767578"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="qIt-Wg-TDD" id="WKe-09-s8B">
-                                    <rect key="frame" x="0.0" y="0.0" width="359.66666666666669" height="56.333332061767578"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="390" height="56.333332061767578"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
-                                        <stackView opaque="NO" contentMode="scaleToFill" distribution="fillProportionally" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0X8-bI-n7Z">
-                                            <rect key="frame" x="20" y="11" width="331.66666666666669" height="34.333333333333336"/>
+                                        <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="0X8-bI-n7Z">
+                                            <rect key="frame" x="20" y="11" width="350" height="34.333333333333336"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Cy-kU-0wP">
-                                                    <rect key="frame" x="0.0" y="0.0" width="29.333333333333332" height="34.333333333333336"/>
+                                                    <rect key="frame" x="0.0" y="0.0" width="28" height="34.333333333333336"/>
                                                     <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
                                                     <state key="normal" image="circle" catalog="system">
                                                         <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="24"/>
                                                     </state>
+                                                    <state key="selected" image="checkmark.circle.fill" catalog="system">
+                                                        <preferredSymbolConfiguration key="preferredSymbolConfiguration" configurationType="pointSize" pointSize="24"/>
+                                                    </state>
+                                                    <connections>
+                                                        <action selector="completeButtonTapped:" destination="qIt-Wg-TDD" eventType="touchUpInside" id="iZe-WJ-RLA"/>
+                                                    </connections>
                                                 </button>
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Ex. Bench Press" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="aZu-j8-JTB">
-                                                    <rect key="frame" x="37.333333333333329" y="0.0" width="132.66666666666669" height="34.333333333333336"/>
+                                                    <rect key="frame" x="36" y="0.0" width="140" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
+                                                        <action selector="returnPressed:" destination="6DW-bu-S0v" eventType="primaryActionTriggered" id="SCa-FQ-9zd"/>
                                                         <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="3nx-h9-n1b"/>
                                                     </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="3" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s2Y-O9-GAy">
-                                                    <rect key="frame" x="178" y="0.0" width="47.333333333333343" height="34.333333333333336"/>
+                                                    <rect key="frame" x="184" y="0.0" width="43" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                     <connections>
-                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingDidEnd" id="1TS-YG-JsH"/>
+                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="e6X-Zh-ruY"/>
                                                     </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="5" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dR6-33-3fi">
-                                                    <rect key="frame" x="233.33333333333337" y="0.0" width="47" height="34.333333333333336"/>
+                                                    <rect key="frame" x="234.99999999999997" y="0.0" width="42.666666666666657" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingDidEnd" id="m3n-NS-IfF"/>
+                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="gLW-U9-MWT"/>
                                                     </connections>
                                                 </textField>
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="135" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lzs-hf-EQW">
-                                                    <rect key="frame" x="288.33333333333331" y="0.0" width="43.333333333333314" height="34.333333333333336"/>
+                                                    <rect key="frame" x="285.66666666666669" y="0.0" width="64.333333333333314" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                                     <textInputTraits key="textInputTraits"/>
                                                     <connections>
-                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingDidEnd" id="kYu-S4-ZMS"/>
+                                                        <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="EfS-9l-hDJ"/>
                                                     </connections>
                                                 </textField>
                                             </subviews>
                                             <constraints>
-                                                <constraint firstItem="s2Y-O9-GAy" firstAttribute="width" secondItem="dR6-33-3fi" secondAttribute="width" id="E6s-k6-tTO"/>
-                                                <constraint firstItem="dR6-33-3fi" firstAttribute="width" secondItem="lzs-hf-EQW" secondAttribute="width" multiplier="1.09091" id="Sdr-BM-qMz"/>
+                                                <constraint firstItem="s2Y-O9-GAy" firstAttribute="width" secondItem="dR6-33-3fi" secondAttribute="width" id="Ji4-3u-awY"/>
                                                 <constraint firstItem="aZu-j8-JTB" firstAttribute="width" secondItem="0X8-bI-n7Z" secondAttribute="width" multiplier="0.4" id="vKV-RH-Fjo"/>
+                                                <constraint firstItem="lzs-hf-EQW" firstAttribute="width" secondItem="dR6-33-3fi" secondAttribute="width" multiplier="1.5" id="yjd-pA-cTy"/>
                                             </constraints>
                                         </stackView>
                                     </subviews>
@@ -325,6 +349,7 @@
                     </tableView>
                     <navigationItem key="navigationItem" title="New Workout" id="e99-eF-nNE"/>
                     <connections>
+                        <outlet property="finishButton" destination="2JU-7a-IzW" id="kpp-RM-sgj"/>
                         <segue destination="eEx-pd-Bbc" kind="unwind" identifier="saveUnwind" unwindAction="unwindToWorkoutTableViewWithSegue:" id="PrH-QN-zrG"/>
                     </connections>
                 </tableViewController>
@@ -448,6 +473,7 @@
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>
         <image name="chart.bar.xaxis" catalog="system" width="128" height="99"/>
+        <image name="checkmark.circle.fill" catalog="system" width="128" height="123"/>
         <image name="circle" catalog="system" width="128" height="123"/>
         <image name="dumbbell.fill" catalog="system" width="128" height="72"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>

@@ -7,13 +7,21 @@
 
 import UIKit
 
+protocol AddEditWorkoutTableViewControllerDelegate: AnyObject {
+    // TODO: Rename method, confusing with other delegate method
+    func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout)
+}
+
 class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableViewCellDelegate {
+    
+    @IBOutlet var finishButton: UIButton!
     
     var workout: Workout?
     var exercises: [Exercise] = []
     
     let titleTextFieldIndexPath = IndexPath(row: 0, section: 0)
-    
+    weak var delegate: AddEditWorkoutTableViewControllerDelegate?
+
     init?(coder: NSCoder, workout: Workout?) {
         self.workout = workout
         super.init(coder: coder)
@@ -25,16 +33,16 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         if let workout = workout {
             // Handle existing workout
             exercises = workout.exercises
             title = workout.name
-            
             self.navigationItem.rightBarButtonItem = editButtonItem
         } else {
             // Handle new workout
-            exercises.append(Exercise(name: "", sets: 0, reps: 0, weight: 0))
-            
+            exercises.append(Exercise(name: "", sets: "", reps: "", weight: ""))
+
             // Set to edit mode (i.e. Display red deletion and rearrange buttons)
             tableView.setEditing(true, animated: true)
             
@@ -43,7 +51,12 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             let saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action:#selector(saveAction))
             self.navigationItem.leftBarButtonItem = cancelButtonItem
             self.navigationItem.rightBarButtonItem = saveButtonItem
-            
+        }
+        
+        // Clear checkmarks
+        for i in 0..<exercises.count {
+            exercises[i].isComplete = false
+            exercises[i].isEditing = false
         }
     }
     
@@ -55,15 +68,27 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             exercises[i].isEditing = editing
         }
         
-        let isDone = !isEditing
-        if isDone {
-            print("Is done")
-        }
-        
         // Reload the table view to update the button's state
         tableView.reloadData()
-        
     }
+    
+    override func viewDidDisappear(_ animated: Bool) {
+        // Save changes to exercises when users presses "back" button. Can't really add action to back button directly
+        if let workout = workout {
+            // Update existing workout
+            let titleCell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
+            let title = titleCell.titleTextField.text!
+            let exercises = exercises.filter { !$0.name.isEmpty || !$0.sets.isEmpty || !$0.reps.isEmpty || !$0.weight.isEmpty } // remove empty cells
+            let workout = Workout(id: workout.id, name: title, exercises: exercises)
+            
+            delegate?.updateWorkout(sender: self, workout: workout)
+//            delegate?.didUpdateExercises(sender: self, exercises: exercises)
+        }
+    }
+    
+    @objc func yourButtonTapped() {
+            // Handle button tap
+        }
     
     @objc func saveAction(sender: UIButton!) {
       performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
@@ -104,6 +129,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             
             // Step 3: Configure cell
             cell.update(with: exercise)  // Pass the editing state to the cell
+            cell.isCompleteButton.isSelected = exercise.isComplete
             cell.isCompleteButton.isHidden = tableView.isEditing
             cell.delegate = self
             
@@ -131,6 +157,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         if editingStyle == .delete {
             exercises.remove(at: indexPath.row) // remove todo from data source
             tableView.deleteRows(at: [indexPath], with: .automatic) // remove todo cell from table view
+            updateFinishButtonState()
         }
     }
     
@@ -159,13 +186,23 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
 
 
     @IBAction func addExerciseButtonTapped(_ sender: Any) {
-        exercises.append(Exercise(name: "", sets: 0, reps: 0, weight: 0))
+        exercises.append(Exercise(name: "", sets: "", reps: "", weight: ""))
         
         let indexPath = IndexPath(row: exercises.count - 1, section: 1)
         
         tableView.beginUpdates()
         tableView.insertRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
+        
+        updateFinishButtonState()
+    }
+    
+    @IBAction func finishButtonTapped(_ sender: UIButton) {
+        saveAction(sender: sender)
+    }
+    
+    @IBAction func returnPressed(_ sender: UITextField) {
+        sender.resignFirstResponder()
     }
     
     func exerciseCell(_ cell: ExerciseTableViewCell, didUpdateExercise exercise: Exercise) {
@@ -173,8 +210,23 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         
         // Update model
         exercises[indexPath.row] = exercise
+        updateFinishButtonState()
     }
     
-    func updateSaveButtonState() {
+    func checkmarkTapped(sender: ExerciseTableViewCell) {
+        if let indexPath = tableView.indexPath(for: sender) {
+            var exercise = exercises[indexPath.row]
+            exercise.isComplete.toggle()
+            exercises[indexPath.row] = exercise
+            tableView.reloadRows(at: [indexPath], with: .automatic) // calls tableview(cellForRowAt:)
+//            ToDo.saveToDos(toDos)
+            updateFinishButtonState()
+        }
+    }
+    
+    func updateFinishButtonState() {
+        finishButton.isEnabled = exercises.allSatisfy {
+            $0.isComplete == true && !$0.name.isEmpty && !$0.sets.isEmpty && !$0.reps.isEmpty && !$0.weight.isEmpty
+        }
     }
 }
