@@ -12,12 +12,15 @@ protocol AddEditWorkoutTableViewControllerDelegate: AnyObject {
     func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout)
 }
 
+//protocol AddEditWorkoutTableViewControllerDelegate
+
 class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableViewCellDelegate {
     
     @IBOutlet var finishButton: UIButton!
     
     var workout: Workout?
     var exercises: [Exercise] = []
+    var startTime: Date?
     
     let titleTextFieldIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: AddEditWorkoutTableViewControllerDelegate?
@@ -39,6 +42,8 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             exercises = workout.exercises
             title = workout.name
             self.navigationItem.rightBarButtonItem = editButtonItem
+            
+            startTime = Date()
         } else {
             // Handle new workout
             exercises.append(Exercise(name: "", sets: "", reps: "", weight: ""))
@@ -91,7 +96,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         }
     
     @objc func saveAction(sender: UIButton!) {
-      performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
+        performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
     }
 
     
@@ -198,6 +203,12 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     }
     
     @IBAction func finishButtonTapped(_ sender: UIButton) {
+        let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
+        let name = cell.titleTextField.text!
+        let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
+        LoggedWorkout.shared.loggedWorkouts.append(workoutToSave)
+        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkouts)
+        NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
         saveAction(sender: sender)
     }
     

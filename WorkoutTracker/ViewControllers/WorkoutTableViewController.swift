@@ -115,6 +115,8 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
             Workout.saveWorkouts(workouts)
         }
     }
+    
+    
 }
 
 // Note: Ideally should deselect when user goes from main -> detail so that users can see where they come from and put this in viewdidappear but it doesnt work with modals.

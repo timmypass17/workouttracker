@@ -8,12 +8,21 @@
 import Foundation
 import UIKit
 
-struct Workout: Codable {
+struct Workout {
     var id: UUID = UUID()
     var name: String
     var exercises: [Exercise]
     var icon: UIImage? {
         return UIImage(systemName: "\(name.first!.lowercased()).circle.fill")
+    }
+    
+    var startTime: Date?
+    var endTime: Date?
+    
+    var dayOfWeek: String? {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE"
+        return dateFormatter.string(from: startTime ?? Date())
     }
     
     // Path to datastore
@@ -34,6 +43,8 @@ struct Workout: Codable {
         try? codedToDos?.write(to: archiveURL, options: .noFileProtection)
     }
 }
+
+extension Workout: Codable { }
 
 extension Workout: Equatable {
     static func == (lhs: Workout, rhs: Workout) -> Bool {
