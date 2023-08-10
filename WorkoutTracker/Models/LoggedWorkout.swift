@@ -12,18 +12,21 @@ struct LoggedWorkout {
     static let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     static let archiveURL = documentsDirectory.appending(path: "logs").appendingPathExtension("plist")
     static let logUpdatedNotification = Notification.Name("LoggedWorkout.logUpdated")
+    static let logAddedNotification = Notification.Name("LoggedWorkout.logAdded")
+    static let logRemovedNotification = Notification.Name("LoggedWorkout.logRemoved")
 
-    var loggedWorkouts: [Workout] = loadWorkoutLogs() ?? []
+    
+    var loggedWorkoutsBySection: [String: [Workout]] = loadWorkoutLogs() ?? [:]
         
-    static func loadWorkoutLogs() -> [Workout]? {
-        print("loading workout")
+    
+    // TODO: Maybe make these methods generic
+    static func loadWorkoutLogs() -> [String: [Workout]]? {
         guard let workouts = try? Data(contentsOf: LoggedWorkout.archiveURL) else { return nil }
         let propertyListDecoder = PropertyListDecoder()
-        return try? propertyListDecoder.decode(Array<Workout>.self, from: workouts)
+        return try? propertyListDecoder.decode([String: [Workout]].self, from: workouts)
     }
     
-    static func saveWorkoutLogs(_ workouts: [Workout]) {
-        print("Save workouts")
+    static func saveWorkoutLogs(_ workouts: [String: [Workout]]) {
         let propertyListEncoder = PropertyListEncoder()
         let codedToDos = try? propertyListEncoder.encode(workouts)
         try? codedToDos?.write(to: LoggedWorkout.archiveURL, options: .noFileProtection)

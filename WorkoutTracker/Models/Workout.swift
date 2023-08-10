@@ -56,12 +56,7 @@ extension Workout {
     static let sampleWorkouts = [
         Workout(
             name: "Leg day",
-            exercises: [
-                Exercise(name: "Squat (Barbell)", sets: "3", reps: "5", weight: "135"),
-                Exercise(name: "Front Squat (Barbell)", sets: "3", reps: "5", weight: "135"),
-                Exercise(name: "Lunges", sets: "4", reps: "12", weight: "135"),
-                Exercise(name: "Goblet Squat (Dumbell)", sets: "4", reps: "12", weight: "135")
-            ]
+            exercises: Exercise.sampleExercises
         ),
         
     ]

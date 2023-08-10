@@ -7,10 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		320566AE2A81C6CA00129C20 /* ProgressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */; };
+		320566B02A81CA4E00129C20 /* ProgressCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320566AF2A81CA4E00129C20 /* ProgressCellView.swift */; };
+		325B41602A82C215001AB323 /* ProgressDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */; };
+		325B41622A82C299001AB323 /* ProgressDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B41612A82C299001AB323 /* ProgressDetailView.swift */; };
 		326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */; };
 		326BA3252A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */; };
 		326BA3272A7EC79E005E9473 /* LoggedWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3262A7EC79E005E9473 /* LoggedWorkout.swift */; };
 		326BA3292A7ED32C005E9473 /* LoggedWorkoutTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3282A7ED32C005E9473 /* LoggedWorkoutTableViewCell.swift */; };
+		326BA32B2A7FE962005E9473 /* Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA32A2A7FE962005E9473 /* Settings.swift */; };
 		326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326CCA282A70C18E00A4716C /* AppDelegate.swift */; };
 		326CCA2B2A70C18E00A4716C /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326CCA2A2A70C18E00A4716C /* SceneDelegate.swift */; };
 		326CCA302A70C18E00A4716C /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 326CCA2E2A70C18E00A4716C /* Main.storyboard */; };
@@ -26,10 +31,15 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTableViewController.swift; sourceTree = "<group>"; };
+		320566AF2A81CA4E00129C20 /* ProgressCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCellView.swift; sourceTree = "<group>"; };
+		325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailViewController.swift; sourceTree = "<group>"; };
+		325B41612A82C299001AB323 /* ProgressDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailView.swift; sourceTree = "<group>"; };
 		326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailTableViewController.swift; sourceTree = "<group>"; };
 		326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedWorkoutTableViewController.swift; sourceTree = "<group>"; };
 		326BA3262A7EC79E005E9473 /* LoggedWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedWorkout.swift; sourceTree = "<group>"; };
 		326BA3282A7ED32C005E9473 /* LoggedWorkoutTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedWorkoutTableViewCell.swift; sourceTree = "<group>"; };
+		326BA32A2A7FE962005E9473 /* Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Settings.swift; sourceTree = "<group>"; };
 		326CCA252A70C18E00A4716C /* WorkoutTracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = WorkoutTracker.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		326CCA282A70C18E00A4716C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		326CCA2A2A70C18E00A4716C /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -85,6 +95,7 @@
 				326CCA312A70C18F00A4716C /* Assets.xcassets */,
 				326CCA332A70C18F00A4716C /* LaunchScreen.storyboard */,
 				326CCA362A70C18F00A4716C /* Info.plist */,
+				326BA32A2A7FE962005E9473 /* Settings.swift */,
 			);
 			path = WorkoutTracker;
 			sourceTree = "<group>";
@@ -96,6 +107,8 @@
 				326D02382A75DE81006EB616 /* AddEditWorkoutTableViewController.swift */,
 				326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */,
 				326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */,
+				320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */,
+				325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -117,6 +130,8 @@
 				326D023A2A75E388006EB616 /* ExerciseTableViewCell.swift */,
 				326D023C2A75F32F006EB616 /* WorkoutTitleTableViewCell.swift */,
 				326BA3282A7ED32C005E9473 /* LoggedWorkoutTableViewCell.swift */,
+				320566AF2A81CA4E00129C20 /* ProgressCellView.swift */,
+				325B41612A82C299001AB323 /* ProgressDetailView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -193,15 +208,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				326BA3252A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift in Sources */,
+				320566B02A81CA4E00129C20 /* ProgressCellView.swift in Sources */,
+				325B41622A82C299001AB323 /* ProgressDetailView.swift in Sources */,
 				326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */,
 				326BA3272A7EC79E005E9473 /* LoggedWorkout.swift in Sources */,
 				326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */,
+				326BA32B2A7FE962005E9473 /* Settings.swift in Sources */,
 				326D023B2A75E388006EB616 /* ExerciseTableViewCell.swift in Sources */,
 				326CCA2B2A70C18E00A4716C /* SceneDelegate.swift in Sources */,
 				326CCA402A71E91800A4716C /* WorkoutTableViewController.swift in Sources */,
 				326CCA452A71F77C00A4716C /* Workout.swift in Sources */,
 				326BA3292A7ED32C005E9473 /* LoggedWorkoutTableViewCell.swift in Sources */,
 				326CCA432A71F6D200A4716C /* WorkoutTableViewCell.swift in Sources */,
+				320566AE2A81C6CA00129C20 /* ProgressTableViewController.swift in Sources */,
+				325B41602A82C215001AB323 /* ProgressDetailViewController.swift in Sources */,
 				326CCA472A71F90F00A4716C /* Exercise.swift in Sources */,
 				326D023D2A75F32F006EB616 /* WorkoutTitleTableViewCell.swift in Sources */,
 				326D02392A75DE81006EB616 /* AddEditWorkoutTableViewController.swift in Sources */,

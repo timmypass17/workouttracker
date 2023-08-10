@@ -21,7 +21,6 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
         }
     }
     
-
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {

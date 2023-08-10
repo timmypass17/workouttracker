@@ -10,13 +10,51 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     var window: UIWindow?
-
-
+    var logTabBarItem: UITabBarItem!
+    
+    // @objc to use as selector
+//    @objc func incrementOrderBadge() {
+//        print("Incrementing badge")
+//        Settings.shared.logBadgeValue += 1
+//        logTabBarItem.badgeValue = Settings.shared.logBadgeValue > 0 ? String(Settings.shared.logBadgeValue) : nil
+//    }
+//
+//    @objc func decrementOrderBadge() {
+//        print("Decrementing badge")
+//        Settings.shared.logBadgeValue = max(Settings.shared.logBadgeValue - 1, 0)
+//        logTabBarItem.badgeValue = Settings.shared.logBadgeValue > 0 ? String(Settings.shared.logBadgeValue) : nil
+//    }
+    
+    @objc func updateOrderBadge() {
+//        Settings.shared.logBadgeValue = max(Settings.shared.logBadgeValue - 1, 0)
+        let count = Settings.shared.logBadgeValue
+        logTabBarItem.badgeValue = count > 0 ? String(count) : nil
+    }
+    
+    
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
         // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
         // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateOrderBadge),
+                                               name: LoggedWorkout.logUpdatedNotification,
+                                               object: nil)
+        
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(incrementOrderBadge),
+//                                               name: LoggedWorkout.logAddedNotification,
+//                                               object: nil)
+//
+//        NotificationCenter.default.addObserver(self,
+//                                               selector: #selector(decrementOrderBadge),
+//                                               name: LoggedWorkout.logRemovedNotification,
+//                                               object: nil)
+//
+        logTabBarItem = (window?.rootViewController as? UITabBarController)?.viewControllers?[1].tabBarItem
+        logTabBarItem.badgeValue = Settings.shared.logBadgeValue > 0 ? String(Settings.shared.logBadgeValue) : nil
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

@@ -46,8 +46,8 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             startTime = Date()
         } else {
             // Handle new workout
-            exercises.append(Exercise(name: "", sets: "", reps: "", weight: ""))
-
+            exercises.append(Exercise(name: "", sets: "", reps: "", weight: "", date: Date()))
+            print(exercises)
             // Set to edit mode (i.e. Display red deletion and rearrange buttons)
             tableView.setEditing(true, animated: true)
             
@@ -191,8 +191,8 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
 
 
     @IBAction func addExerciseButtonTapped(_ sender: Any) {
-        exercises.append(Exercise(name: "", sets: "", reps: "", weight: ""))
-        
+        exercises.append(Exercise(name: "", sets: "", reps: "", weight: "", date: Date()))
+        print(exercises)
         let indexPath = IndexPath(row: exercises.count - 1, section: 1)
         
         tableView.beginUpdates()
@@ -206,8 +206,19 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
         let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
-        LoggedWorkout.shared.loggedWorkouts.append(workoutToSave)
-        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkouts)
+        print(workoutToSave)
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let sectionKey = dateFormatter.string(from: workoutToSave.startTime!) // "August 2023"
+        
+        if LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] == nil {
+            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] = []
+        }
+        LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.insert(workoutToSave, at: 0)
+        
+        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
+        
+        Settings.shared.logBadgeValue += 1
         NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
         saveAction(sender: sender)
     }
@@ -220,7 +231,10 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         guard let indexPath = tableView.indexPath(for: cell) else { return }
         
         // Update model
+        let date = exercises[indexPath.row].date
         exercises[indexPath.row] = exercise
+        exercises[indexPath.row].date = date
+        
         updateFinishButtonState()
     }
     

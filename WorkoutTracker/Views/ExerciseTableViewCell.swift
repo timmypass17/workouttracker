@@ -43,12 +43,11 @@ class ExerciseTableViewCell: UITableViewCell {
         let sets = setsTextField.text ?? ""
         let reps = repsTextField.text ?? ""
         let weight = weightTextField.text ?? ""
-        let isCompelte = isCompleteButton.isSelected
-        let exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isCompelte)
+        let isComplete = isCompleteButton.isSelected
+        let exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isComplete)
         
         // Notify the delegate that the exercise was updated
         delegate?.exerciseCell(self, didUpdateExercise: exercise)
-        
     }
     
     @IBAction func completeButtonTapped(_ sender: UIButton) {
