@@ -26,7 +26,10 @@ class WorkoutTableViewCell: UITableViewCell {
 
     func update(with workout: Workout) {
         nameLabel.text = workout.name
-        descriptionLabel.text = workout.exercises.map { "\($0.sets)x\($0.reps) \($0.name)" }.joined(separator: "\n")
+        descriptionLabel.text = workout.exercises
+            .map { "\($0.sets)x\($0.reps) \($0.name) - \($0.weight)lbs" }.joined(separator: "\n")
+//        descriptionLabel.text = workout.exercises.map { $0.name }.joined(separator: ", ")
+//        descriptionLabel.text = workout.exercises.map { "\($0.sets)x\($0.reps) \($0.name)" }.joined(separator: "\n")
         iconImage.image = workout.icon
     }
 }

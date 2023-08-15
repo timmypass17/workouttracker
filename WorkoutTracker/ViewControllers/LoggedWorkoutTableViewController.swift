@@ -9,23 +9,21 @@ import UIKit
 
 class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
         
-    var sortedMonths: [String] = []
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
+    var sortedMonths: [String]  {
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
         
-        sortedMonths = LoggedWorkout.shared.loggedWorkoutsBySection.keys.sorted { (string1, string2) -> Bool in
+        return LoggedWorkout.shared.loggedWorkoutsBySection.keys.sorted { (string1, string2) -> Bool in
             if let date1 = dateFormatter.date(from: string1), let date2 = dateFormatter.date(from: string2) {
                 return date1 < date2
             }
             return false
         }
-        
-        print("Sorted months: \(sortedMonths)")
-        
+    }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
         NotificationCenter.default.addObserver(tableView!,
             selector: #selector(UITableView.reloadData),
             name: LoggedWorkout.logUpdatedNotification, object: nil
@@ -73,6 +71,15 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             let month = sortedMonths[indexPath.section]
             LoggedWorkout.shared.loggedWorkoutsBySection[month]!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
+            
+            // If no exercises left, remove completely
+            if LoggedWorkout.shared.loggedWorkoutsBySection[month]!.isEmpty {
+                print("Removing month")
+                LoggedWorkout.shared.loggedWorkoutsBySection[month] = nil
+//                sortedMonths.removeAll(where: { $0 == month })
+                tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            }
+            
             LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
             
             Settings.shared.logBadgeValue = max(Settings.shared.logBadgeValue - 1, 0)
