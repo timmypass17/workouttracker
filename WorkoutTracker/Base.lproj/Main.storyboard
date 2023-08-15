@@ -175,20 +175,20 @@
         <scene sceneID="EuM-Rt-7Zd">
             <objects>
                 <tableViewController id="XuY-03-xpF" customClass="LoggedWorkoutTableViewController" customModule="WorkoutTracker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="mx5-YY-hlq">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" id="mx5-YY-hlq">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="LoggedWorkoutCell" rowHeight="105" id="X97-IC-m6P" customClass="LoggedWorkoutTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
-                                <rect key="frame" x="20" y="38" width="350" height="105"/>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" reuseIdentifier="LoggedWorkoutCell" rowHeight="105" id="X97-IC-m6P" customClass="LoggedWorkoutTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="50" width="390" height="105"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="X97-IC-m6P" id="jD4-ge-lnf">
-                                    <rect key="frame" x="0.0" y="0.0" width="350" height="105"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="359.66666666666669" height="105"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                     <subviews>
                                         <stackView opaque="NO" contentMode="scaleToFill" alignment="top" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="tVF-qp-clW">
-                                            <rect key="frame" x="20" y="11" width="310" height="83"/>
+                                            <rect key="frame" x="20" y="11" width="331.66666666666669" height="83"/>
                                             <subviews>
                                                 <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="HO6-Up-akM">
                                                     <rect key="frame" x="0.0" y="0.0" width="4" height="68.333333333333329"/>
@@ -218,16 +218,16 @@
                                                     </constraints>
                                                 </stackView>
                                                 <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="P6E-wX-EgF">
-                                                    <rect key="frame" x="70" y="0.0" width="240" height="66.666666666666671"/>
+                                                    <rect key="frame" x="70" y="0.0" width="261.66666666666669" height="66.666666666666671"/>
                                                     <subviews>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" text="Leg Day" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="qqb-AI-Gsg">
-                                                            <rect key="frame" x="0.0" y="0.0" width="240" height="20.333333333333332"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="261.66666666666669" height="20.333333333333332"/>
                                                             <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                             <nil key="textColor"/>
                                                             <nil key="highlightedColor"/>
                                                         </label>
                                                         <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="3x5 Squat (Barbell) 3x5 Front Squat (Barbell) 4x12 Lunges 4x12 Goblet Squat (Dumbell) 3x5 Deadlift" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ewC-yM-uH3">
-                                                            <rect key="frame" x="0.0" y="20.333333333333332" width="240" height="46.333333333333343"/>
+                                                            <rect key="frame" x="0.0" y="20.333333333333332" width="261.66666666666669" height="46.333333333333343"/>
                                                             <fontDescription key="fontDescription" style="UICTFontTextStyleCaption1"/>
                                                             <color key="textColor" systemColor="secondaryLabelColor"/>
                                                             <nil key="highlightedColor"/>
@@ -547,7 +547,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="shq-AO-QgN"/>
+        <segue reference="zZU-kX-7zw"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>

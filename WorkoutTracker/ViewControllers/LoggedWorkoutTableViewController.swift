@@ -8,9 +8,23 @@
 import UIKit
 
 class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
-    
+        
+    var sortedMonths: [String] = []
+
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        
+        sortedMonths = LoggedWorkout.shared.loggedWorkoutsBySection.keys.sorted { (string1, string2) -> Bool in
+            if let date1 = dateFormatter.date(from: string1), let date2 = dateFormatter.date(from: string2) {
+                return date1 < date2
+            }
+            return false
+        }
+        
+        print("Sorted months: \(sortedMonths)")
         
         NotificationCenter.default.addObserver(tableView!,
             selector: #selector(UITableView.reloadData),
@@ -25,21 +39,19 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-//        return 1
         return LoggedWorkout.shared.loggedWorkoutsBySection.count
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-//        return LoggedWorkout.shared.loggedWorkouts.count
-        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[section]
-        return LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]?.count ?? 0
+        let month = sortedMonths[section]
+        return LoggedWorkout.shared.loggedWorkoutsBySection[month]?.count ?? 0
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "LoggedWorkoutCell", for: indexPath) as! LoggedWorkoutTableViewCell
         
-        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[indexPath.section]
-        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![indexPath.row]
+        let month = sortedMonths[indexPath.section]
+        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[month]![indexPath.row]
         cell.update(with: workout)
         return cell
     }
@@ -48,8 +60,8 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)!
 
-        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[indexPath.section]
-        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![indexPath.row]
+        let month = sortedMonths[indexPath.section]
+        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[month]![indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
         let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, workout: workout, isLogged: true)
         addEditWorkoutTableViewController?.delegate = self
@@ -58,8 +70,8 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
-            let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[indexPath.section]
-            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.remove(at: indexPath.row)
+            let month = sortedMonths[indexPath.section]
+            LoggedWorkout.shared.loggedWorkoutsBySection[month]!.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
             
@@ -67,24 +79,13 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
         }
     }
-    
-//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-//        tableView.deselectRow(at: indexPath, animated: true)
-//        let cell = tableView.cellForRow(at: indexPath) as! LoggedWorkoutTableViewCell
-//        
-//        let isExpanded = cell.exercisesLabel.numberOfLines == 0
-//        cell.exercisesLabel.numberOfLines = isExpanded ? 3 : 0
-//        
-//        tableView.beginUpdates()
-//        tableView.endUpdates()
-//    }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
         let headerView = CustomHeaderView()
         // Configure the leading and trailing labels as needed
-        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[section]
-        headerView.leadingLabel.text = sectionKey
-        headerView.trailingLabel.text = "\(LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.count) Workouts"
+        let month = sortedMonths[section]
+        headerView.leadingLabel.text = month
+        headerView.trailingLabel.text = "\(LoggedWorkout.shared.loggedWorkoutsBySection[month]!.count) Workouts"
         return headerView
     }
     
