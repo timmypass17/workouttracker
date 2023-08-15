@@ -253,6 +253,7 @@
                                     <outlet property="exercisesLabel" destination="ewC-yM-uH3" id="fho-4r-T1o"/>
                                     <outlet property="weekdayLabel" destination="462-BI-lFF" id="RI7-Ob-mmy"/>
                                     <outlet property="workoutLabel" destination="qqb-AI-Gsg" id="p4m-Zr-ONP"/>
+                                    <segue destination="6DW-bu-S0v" kind="show" destinationCreationSelector="showWorkoutDetail:sender:" id="zZU-kX-7zw"/>
                                 </connections>
                             </tableViewCell>
                         </prototypes>
@@ -262,8 +263,12 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Log" id="8Te-vw-b4h"/>
+                    <connections>
+                        <segue destination="Rk5-FV-SNp" kind="unwind" identifier="" unwindAction="unwindToLoggedWorkoutTableViewWithSegue:" id="9NN-Rt-0ub"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xh7-Hw-I1k" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+                <exit id="Rk5-FV-SNp" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
             <point key="canvasLocation" x="2040" y="780.56872037914684"/>
         </scene>
@@ -316,7 +321,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ctn-4W-57r" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="731" y="1487"/>
+            <point key="canvasLocation" x="906" y="1687"/>
         </scene>
         <!--Progress Detail View Controller-->
         <scene sceneID="7re-gY-2AC">
@@ -361,9 +366,6 @@
                                     <buttonConfiguration key="configuration" style="filled" title="Finish Workout">
                                         <backgroundConfiguration key="background" cornerRadius="0.0"/>
                                     </buttonConfiguration>
-                                    <connections>
-                                        <action selector="finishButtonTapped:" destination="6DW-bu-S0v" eventType="touchUpInside" id="Rcj-Mj-dAo"/>
-                                    </connections>
                                 </button>
                             </subviews>
                         </stackView>
@@ -497,12 +499,13 @@
                     <connections>
                         <outlet property="finishButton" destination="2JU-7a-IzW" id="kpp-RM-sgj"/>
                         <segue destination="eEx-pd-Bbc" kind="unwind" identifier="saveUnwind" unwindAction="unwindToWorkoutTableViewWithSegue:" id="PrH-QN-zrG"/>
+                        <segue destination="eEx-pd-Bbc" kind="unwind" identifier="updateUnwind" unwindAction="unwindToLoggedWorkoutTableViewWithSegue:" id="JHe-B8-h8Z"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Plm-QR-ogU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="eEx-pd-Bbc" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="1351" y="2220"/>
+            <point key="canvasLocation" x="1652" y="2354"/>
         </scene>
         <!--Progress-->
         <scene sceneID="y7V-Hm-FQF">
@@ -544,7 +547,7 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="HCt-ty-HSr"/>
+        <segue reference="shq-AO-QgN"/>
     </inferredMetricsTieBreakers>
     <resources>
         <image name="calendar" catalog="system" width="128" height="107"/>

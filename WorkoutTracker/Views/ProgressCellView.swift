@@ -12,16 +12,26 @@ struct ExerciseProgressCellView: View {
     var data: [Exercise]
     
     var body: some View {
-        VStack(alignment: .leading) {
-            ExerciseTitleView(title: data.first!.name, time: Date())
-            HStack(alignment: .bottom) {
+        HStack(alignment: .top) {
+            VStack(alignment: .leading, spacing: 4) {
+                ExerciseTitleView(title: data.first!.name, time: Date())
                 HighestWeightView(weight: data.max { $0.weight < $1.weight }?.weight ?? "0")
-                Spacer(minLength: 60)
-                ExerciseChartView(exercises: data)
             }
+            .padding(.top, 4)
+            
+            Spacer(minLength: 20)
+            ExerciseChartView(exercises: data)
+                .padding(8)
+//                .border(.blue)
+
         }
-        .padding(.vertical, 8)
-        .frame(height: 60)
+        .frame(height: 90)
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yyyy"
+        return formatter.string(from: date)
     }
 }
 
@@ -30,15 +40,11 @@ struct ExerciseTitleView: View {
     var time: Date
     
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
+        VStack(alignment: .leading) {
             Label(title, systemImage: "dumbbell.fill")
 //                .foregroundStyle(.pink)
-                .font(.system(.subheadline, weight: .bold))
+                .font(.system(.headline, weight: .bold))
                 .layoutPriority(1)
-            Spacer()
-            Text(formatDate(time))
-                .foregroundStyle(.secondary)
-                .font(.footnote)
         }
     }
     
@@ -53,13 +59,24 @@ struct HighestWeightView: View {
     var weight: String
     
     var body: some View {
-        HStack(alignment: .firstTextBaseline) {
-            Text(weight)
-                .foregroundStyle(.primary)
-                .font(.system(.title2, weight: .semibold))
-            Text("LBS")
-                .foregroundStyle(.secondary)
-                .font(.system(.subheadline, weight: .bold))
+        VStack(alignment: .leading) {
+            Text("Best: \(weight) lbs")
+                .font(.subheadline)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 2)
+                .overlay(Color.secondary.opacity(0.15))
+                .clipShape(RoundedRectangle(cornerRadius: 4))
+            
+            HStack(alignment: .firstTextBaseline) {
+                Text("Latest: \(weight) lbs")
+                    .foregroundColor(.secondary)
+                    .font(.caption)
+            }
+            
+            Text("Updated: Aug 12, 2023")
+                .foregroundColor(.secondary)
+                .font(.caption2)
+
         }
     }
 }

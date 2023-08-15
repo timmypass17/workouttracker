@@ -19,14 +19,16 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     @IBOutlet var finishButton: UIButton!
     
     var workout: Workout?
+    var isLogged: Bool
     var exercises: [Exercise] = []
     var startTime: Date?
     
     let titleTextFieldIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: AddEditWorkoutTableViewControllerDelegate?
 
-    init?(coder: NSCoder, workout: Workout?) {
+    init?(coder: NSCoder, workout: Workout?, isLogged: Bool = false) {
         self.workout = workout
+        self.isLogged = isLogged
         super.init(coder: coder)
     }
 
@@ -37,13 +39,38 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        if let workout = workout {
+        if let workout = workout, isLogged {
+            // Handle logged workout
+            exercises = workout.exercises
+            title = workout.name
+            self.navigationItem.rightBarButtonItem = editButtonItem
+            
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "MMM d, yyyy"
+
+            let date = Date() // Replace this with your actual date
+            let formattedDate = dateFormatter.string(from: workout.startTime!)
+            
+            finishButton.setTitle("Update Log at \(formattedDate)", for: .normal)
+            finishButton.addTarget(self, action: #selector(updateButtonTapped(_:)), for: .touchUpInside)
+            finishButton.isEnabled = true
+        }
+        else if let workout = workout {
             // Handle existing workout
             exercises = workout.exercises
             title = workout.name
             self.navigationItem.rightBarButtonItem = editButtonItem
             
             startTime = Date()
+            
+            finishButton.addTarget(self, action: #selector(finishButtonTapped(_:)), for: .touchUpInside)
+
+            
+            // Clear checkmarks
+            for i in 0..<exercises.count {
+                exercises[i].isComplete = false
+                exercises[i].isEditing = false
+            }
         } else {
             // Handle new workout
             exercises.append(Exercise(name: "", sets: "", reps: "", weight: "", date: Date()))
@@ -56,12 +83,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             let saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action:#selector(saveAction))
             self.navigationItem.leftBarButtonItem = cancelButtonItem
             self.navigationItem.rightBarButtonItem = saveButtonItem
-        }
-        
-        // Clear checkmarks
-        for i in 0..<exercises.count {
-            exercises[i].isComplete = false
-            exercises[i].isEditing = false
         }
     }
     
@@ -175,14 +196,14 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // User pressed "cancel", do nothing
-        guard segue.identifier == "saveUnwind" else { return }
+        guard segue.identifier == "saveUnwind" || segue.identifier == "updateUnwind" else { return }
         
         // Handle saving workout to let main vc have access
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
         if let workout = workout {
             // Edit
-            self.workout = Workout(id: workout.id, name: name, exercises: exercises)
+            self.workout = Workout(id: workout.id, name: name, exercises: exercises, startTime: workout.startTime, endTime: workout.endTime)
         } else {
             // Add
             self.workout =  Workout(name: name, exercises: exercises)
@@ -202,11 +223,36 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         updateFinishButtonState()
     }
     
-    @IBAction func finishButtonTapped(_ sender: UIButton) {
+    @objc func updateButtonTapped(_ sender: UIButton) {
+        let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
+        let name = cell.titleTextField.text!
+        let updatedWorkout = Workout(id: workout!.id, name: name, exercises: exercises, startTime: workout!.endTime, endTime: workout!.endTime)
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let sectionKey = dateFormatter.string(from: updatedWorkout.startTime!) // "August 2023"
+        
+        // Update existing workout
+        if let index = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]?.firstIndex(where: { $0.id == updatedWorkout.id }) {
+            print("Saving existing workout log")
+            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![index] = updatedWorkout
+            LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
+            NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
+        }
+        
+        performSegue(withIdentifier: "updateUnwind", sender: nil)
+    }
+    
+    @objc func finishButtonTapped(_ sender: UIButton) {
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
         let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
-        print(workoutToSave)
+        
+        // For debugging
+//        var workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
+//        workoutToSave.startTime = Calendar.current.date(byAdding: .month, value: -1, to: startTime!)
+        
+        
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
         let sectionKey = dateFormatter.string(from: workoutToSave.startTime!) // "August 2023"
@@ -223,6 +269,27 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         saveAction(sender: sender)
     }
     
+//    @IBAction func finishButtonTapped(_ sender: UIButton) {
+//        let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
+//        let name = cell.titleTextField.text!
+//        let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
+//
+//        let dateFormatter = DateFormatter()
+//        dateFormatter.dateFormat = "MMMM yyyy"
+//        let sectionKey = dateFormatter.string(from: workoutToSave.startTime!) // "August 2023"
+//
+//        if LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] == nil {
+//            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] = []
+//        }
+//        LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.insert(workoutToSave, at: 0)
+//
+//        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
+//
+//        Settings.shared.logBadgeValue += 1
+//        NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
+//        saveAction(sender: sender)
+//    }
+//
     @IBAction func returnPressed(_ sender: UITextField) {
         sender.resignFirstResponder()
     }
@@ -234,13 +301,14 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         let date = exercises[indexPath.row].date
         exercises[indexPath.row] = exercise
         exercises[indexPath.row].date = date
-        
+        print(exercises[indexPath.row])
         updateFinishButtonState()
     }
     
     func checkmarkTapped(sender: ExerciseTableViewCell) {
         if let indexPath = tableView.indexPath(for: sender) {
             var exercise = exercises[indexPath.row]
+            exercise.date = Date()
             exercise.isComplete.toggle()
             exercises[indexPath.row] = exercise
             tableView.reloadRows(at: [indexPath], with: .automatic) // calls tableview(cellForRowAt:)

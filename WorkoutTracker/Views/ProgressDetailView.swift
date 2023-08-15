@@ -96,11 +96,17 @@ struct ProgressDetailView: View {
                             if difference > 0 {
                                 // More weight
                                 Text("+\(difference) lbs")
-                                    .foregroundColor(Color.green)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .overlay(Color.green.opacity(0.15))
+                                    .clipShape(RoundedRectangle(cornerRadius: 4))
                             } else if difference < 0 {
                                 // Less weight
                                 Text("\(difference) lbs")
-                                    .foregroundColor(Color.red)
+                                    .padding(.horizontal, 8)
+                                    .padding(.vertical, 2)
+                                    .overlay(Color.red.opacity(0.15))
+                                    .clipShape(RoundedRectangle(cornerRadius: 4))
                             } else {
                                 // No weight gain
                                 Text("-")

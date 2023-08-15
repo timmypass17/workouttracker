@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoggedWorkoutTableViewController: UITableViewController {
+class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -43,6 +43,18 @@ class LoggedWorkoutTableViewController: UITableViewController {
         cell.update(with: workout)
         return cell
     }
+
+    @IBSegueAction func showWorkoutDetail(_ coder: NSCoder, sender: Any?) -> AddEditWorkoutTableViewController? {
+        let cell = sender as! UITableViewCell
+        let indexPath = tableView.indexPath(for: cell)!
+
+        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[indexPath.section]
+        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![indexPath.row]
+        tableView.deselectRow(at: indexPath, animated: true)
+        let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, workout: workout, isLogged: true)
+        addEditWorkoutTableViewController?.delegate = self
+        return addEditWorkoutTableViewController
+    }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         if editingStyle == .delete {
@@ -56,21 +68,15 @@ class LoggedWorkoutTableViewController: UITableViewController {
         }
     }
     
-    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.deselectRow(at: indexPath, animated: true)
-        let cell = tableView.cellForRow(at: indexPath) as! LoggedWorkoutTableViewCell
-        
-        let isExpanded = cell.exercisesLabel.numberOfLines == 0
-        cell.exercisesLabel.numberOfLines = isExpanded ? 3 : 0
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
-    }
-    
-    
-//    override func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-//        let sectionKey = Array(LoggedWorkout.shared.loggedWorkoutsBySection.keys)[section]
-//        return sectionKey
+//    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+//        tableView.deselectRow(at: indexPath, animated: true)
+//        let cell = tableView.cellForRow(at: indexPath) as! LoggedWorkoutTableViewCell
+//        
+//        let isExpanded = cell.exercisesLabel.numberOfLines == 0
+//        cell.exercisesLabel.numberOfLines = isExpanded ? 3 : 0
+//        
+//        tableView.beginUpdates()
+//        tableView.endUpdates()
 //    }
 
     override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
@@ -81,10 +87,34 @@ class LoggedWorkoutTableViewController: UITableViewController {
         headerView.trailingLabel.text = "\(LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.count) Workouts"
         return headerView
     }
+    
+    @IBAction func unwindToLoggedWorkoutTableView(segue: UIStoryboardSegue) {
+        print("unwindToLoggedWorkoutTableView")
+        // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
+        guard segue.identifier == "updateUnwind",
+              let sourceViewController = segue.source as? AddEditWorkoutTableViewController,
+              let workout = sourceViewController.workout else {
+            return
+        }
+
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMMM yyyy"
+        let sectionKey = dateFormatter.string(from: workout.startTime!) // "August 2023"
+        
+        if let indexOfExistingWorkout = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]?.firstIndex(of: workout) {
+            print(workout)
+            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![indexOfExistingWorkout] = workout
+            tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
+        }
+    }
 
 //    override func tableView(_ tableView: UITableView, heightForHeaderInSection section: Int) -> CGFloat {
 //        return 50.0 // Adjust the header height as needed
 //    }
+    
+    func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout) {
+        // Do nothing. Updates shouldn't happen automatically when viewing logs. User should explicity press "save" to update log
+    }
     
     func clearBadge() {
         // Don't want to send notification if badge isn't 0
