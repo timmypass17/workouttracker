@@ -301,6 +301,9 @@
                     <navigationItem key="navigationItem" title="Progress" id="OJ3-Qt-igd">
                         <barButtonItem key="rightBarButtonItem" title="Item" image="line.3.horizontal.decrease" catalog="system" id="LDF-YS-t0a"/>
                     </navigationItem>
+                    <connections>
+                        <outlet property="sortBarButton" destination="LDF-YS-t0a" id="niC-bm-ZjA"/>
+                    </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="XvY-On-czw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>

@@ -12,18 +12,18 @@ struct ExerciseProgressCellView: View {
     var data: [Exercise]
     
     var body: some View {
-        HStack(alignment: .top) {
+        HStack(alignment: .center) {
             VStack(alignment: .leading, spacing: 4) {
                 ExerciseTitleView(title: data.first!.name, time: Date())
-                HighestWeightView(weight: data.max { $0.weight < $1.weight }?.weight ?? "0")
+                HighestWeightView(
+                    highestWeight: data.max { $0.weight < $1.weight }?.weight ?? "0",
+                    recentExercise: data.max(by: { $0.date! < $1.date! })!
+                )
             }
-            .padding(.top, 4)
             
             Spacer(minLength: 20)
             ExerciseChartView(exercises: data)
                 .padding(8)
-//                .border(.blue)
-
         }
         .frame(height: 90)
     }
@@ -40,12 +40,12 @@ struct ExerciseTitleView: View {
     var time: Date
     
     var body: some View {
-        VStack(alignment: .leading) {
-            Label(title, systemImage: "dumbbell.fill")
-//                .foregroundStyle(.pink)
-                .font(.system(.headline, weight: .bold))
-                .layoutPriority(1)
+        HStack {
+            Image(systemName: "dumbbell.fill")
+                .foregroundColor(.accentColor)
+            Text(title)
         }
+        .font(.system(.headline, weight: .bold))
     }
     
     private func formatDate(_ date: Date) -> String {
@@ -56,11 +56,12 @@ struct ExerciseTitleView: View {
 }
 
 struct HighestWeightView: View {
-    var weight: String
+    var highestWeight: String
+    var recentExercise: Exercise
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Best: \(weight) lbs")
+            Text("Best: \(highestWeight) lbs")
                 .font(.subheadline)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 2)
@@ -68,16 +69,22 @@ struct HighestWeightView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))
             
             HStack(alignment: .firstTextBaseline) {
-                Text("Latest: \(weight) lbs")
+                Text("Latest: \(recentExercise.weight) lbs")
                     .foregroundColor(.secondary)
                     .font(.caption)
             }
             
-            Text("Updated: Aug 12, 2023")
+            Text("Updated: \(formatDate(recentExercise.date!))")
                 .foregroundColor(.secondary)
                 .font(.caption2)
 
         }
+    }
+    
+    func formatDate(_ date: Date) -> String {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "MMM d, yyyy"
+        return dateFormatter.string(from: date)
     }
 }
 

@@ -10,6 +10,12 @@ import Foundation
 
 enum Setting {
     static let logBadge = "logBadge"
+    static let sortPreference = "sortPreference"
+
+}
+
+enum SortBy: Codable {
+    case alphabetically, weight, recent
 }
 
 struct Settings {
@@ -37,6 +43,15 @@ struct Settings {
         }
         set {
             archiveJSON(value: newValue, key: Setting.logBadge)
+        }
+    }
+
+    var sortingPreference: SortBy {
+        get {
+            return unarchiveJSON(key: Setting.sortPreference) ?? .alphabetically
+        }
+        set {
+            archiveJSON(value: newValue, key: Setting.sortPreference)
         }
     }
 }

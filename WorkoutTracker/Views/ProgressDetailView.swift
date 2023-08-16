@@ -98,6 +98,7 @@ struct ProgressDetailView: View {
                                 Text("+\(difference) lbs")
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
+//                                    .frame(width: 70, height: 25)
                                     .overlay(Color.green.opacity(0.15))
                                     .clipShape(RoundedRectangle(cornerRadius: 4))
                             } else if difference < 0 {

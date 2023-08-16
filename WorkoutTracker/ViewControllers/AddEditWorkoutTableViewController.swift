@@ -226,7 +226,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     @objc func updateButtonTapped(_ sender: UIButton) {
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
-        let updatedWorkout = Workout(id: workout!.id, name: name, exercises: exercises, startTime: workout!.endTime, endTime: workout!.endTime)
+        let updatedWorkout = Workout(id: workout!.id, name: name, exercises: exercises, startTime: workout!.startTime, endTime: workout!.endTime)
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
@@ -248,10 +248,13 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         let name = cell.titleTextField.text!
         let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
         
-        // For debugging
+//        // For debugging
 //        var workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
 //        workoutToSave.startTime = Calendar.current.date(byAdding: .month, value: -1, to: startTime!)
-        
+//
+//        for i in workoutToSave.exercises.indices {
+//            workoutToSave.exercises[i].date = Calendar.current.date(byAdding: .month, value: -1, to: workoutToSave.exercises[i].date!)
+//        }
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
