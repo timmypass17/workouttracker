@@ -8,7 +8,7 @@
 import SwiftUI
 import Charts
 
-enum TimeRange: String, CaseIterable, Identifiable {
+enum SelectedFilter: String, CaseIterable, Identifiable {
     case all = "all"
     case week
     case month
@@ -19,13 +19,33 @@ enum TimeRange: String, CaseIterable, Identifiable {
 
 struct ProgressDetailView: View {
     @ObservedObject var data: ProgressData
-    @State private var selectedTimeRange: TimeRange = .all
+    @State private var selectedFilter: SelectedFilter = .all
+    @State private var animate = false
+
+    var filteredData: [Exercise] {
+        switch selectedFilter {
+        case .all:
+            return data.data
+        case .week:
+            let oneWeekAgo = Calendar.current.date(byAdding: .day, value: -7, to: Date())!
+            return data.data.filter { $0.date! >= oneWeekAgo }
+        case .month:
+            let oneMonthAgo = Calendar.current.date(byAdding: .month, value: -1, to: Date())!
+            return data.data.filter { $0.date! >= oneMonthAgo }
+        case .sixMonth:
+            let sixMonthsAgo = Calendar.current.date(byAdding: .month, value: -6, to: Date())!
+            return data.data.filter { $0.date! >= sixMonthsAgo }
+        case .year:
+            let oneYearAgo = Calendar.current.date(byAdding: .year, value: -1, to: Date())!
+            return data.data.filter { $0.date! >= oneYearAgo }
+        }
+    }
     
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Picker("Time", selection: $selectedTimeRange) {
-                    ForEach(TimeRange.allCases) { time in
+                Picker("Time", selection: $selectedFilter) {
+                    ForEach(SelectedFilter.allCases) { time in
                         Text(time.rawValue.capitalized)
                     }
                 }
@@ -46,9 +66,9 @@ struct ProgressDetailView: View {
                     .foregroundColor(.secondary)
                     .font(.subheadline)
                 
-                Chart(data.data) { exercise in
+                Chart(filteredData) { exercise in
                     LineMark(x: .value("Time", exercise.date ?? Date()),
-                             y: .value("Beats Per Minute", Int(exercise.weight)!))
+                             y: .value("Beats Per Minute", Float(exercise.weight)!))
                     .symbol(Circle().strokeBorder(lineWidth: 2))
                     .symbolSize(CGSize(width: 6, height: 6))
         //            .foregroundStyle(.pink)
@@ -64,38 +84,38 @@ struct ProgressDetailView: View {
                     
                     Spacer()
                     
-                    Text("\(data.data.count) Workouts".uppercased())
+                    Text("\(filteredData.count) Workouts".uppercased())
                 }
                 .foregroundColor(.secondary)
                 .font(.subheadline)
                 
-                ForEach(data.data.indices) { i in
+                ForEach(Array(filteredData.enumerated()), id: \.offset) { i, exercise in
                     
                     Divider()
                     
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
-                            Text("\(data.data[i].weight) lbs")
+                            Text("\(exercise.weight) lbs")
                                 .font(.headline)
                             
                             //"60lbs 3x5 Sep 20, 2023"
-                            Text("\(data.data[i].sets)x\(data.data[i].reps) \(data.data[i].name) at \(formatDate(data.data[i].date!))")
+                            Text("\(filteredData[i].sets)x\(filteredData[i].reps) \(filteredData[i].name) at \(formatDate(filteredData[i].date!))")
                                 .font(.subheadline)
                                 .foregroundColor(.gray)
                         }
                         Spacer()
                         
                         // last element case
-                        if i == data.data.count - 1 {
+                        if i == filteredData.count - 1 {
                             Text("-")
                                 .foregroundColor(.secondary)
                         } else {
-                            let weight = Int(data.data[i].weight)!
-                            let previousWeight = Int(data.data[i + 1].weight)!
+                            let weight = Float(filteredData[i].weight)!
+                            let previousWeight = Float(filteredData[i + 1].weight)!
                             let difference = weight - previousWeight
                             if difference > 0 {
                                 // More weight
-                                Text("+\(difference) lbs")
+                                Text("+\(formatFloat(difference)) lbs")
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
 //                                    .frame(width: 70, height: 25)
@@ -103,7 +123,7 @@ struct ProgressDetailView: View {
                                     .clipShape(RoundedRectangle(cornerRadius: 4))
                             } else if difference < 0 {
                                 // Less weight
-                                Text("\(difference) lbs")
+                                Text("\(formatFloat(difference)) lbs")
                                     .padding(.horizontal, 8)
                                     .padding(.vertical, 2)
                                     .overlay(Color.red.opacity(0.15))
@@ -119,10 +139,17 @@ struct ProgressDetailView: View {
                 }
             }
             .padding()
+            .animation(.default, value: filteredData.count) // animation trigger when value changes
+
         }
-        .onAppear {
-            print(data.data.map { formatDate($0.date!) } )
-        }
+    }
+    
+    func formatFloat(_ floatValue: Float) -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2 // You can adjust this as needed
+        
+        return formatter.string(from: NSNumber(value: floatValue)) ?? "\(floatValue)"
     }
     
     private func formatDate(_ date: Date) -> String {

@@ -33,7 +33,7 @@ class ProgressTableViewController: UITableViewController {
     var sortByRecentlyUpdated: (ProgressData, ProgressData) -> Bool = { exercise, otherExercise in
         let mostRecentExercise = exercise.data.max(by: { $0.date! < $1.date! })!
         let mostRecentOtherExercise = otherExercise.data.max(by: { $0.date! < $1.date! })!
-        return mostRecentExercise.date! < mostRecentOtherExercise.date!
+        return mostRecentExercise.date! > mostRecentOtherExercise.date!
     }
     
     var menuItems: [UIAction] {

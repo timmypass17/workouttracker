@@ -94,7 +94,7 @@ struct ExerciseChartView: View {
     var body: some View {
         Chart(exercises) { exercise in
             LineMark(x: .value("Time", exercise.date ?? Date()),
-                     y: .value("Beats Per Minute", Int(exercise.weight)!))
+                     y: .value("Beats Per Minute", Float(exercise.weight)!))
             .symbol(Circle().strokeBorder(lineWidth: 2))
             .symbolSize(CGSize(width: 6, height: 6))
 //            .foregroundStyle(.pink)
