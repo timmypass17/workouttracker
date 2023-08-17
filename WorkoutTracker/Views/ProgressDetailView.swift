@@ -56,13 +56,13 @@ struct ProgressDetailView: View {
                     .foregroundColor(.secondary)
                     .font(.subheadline)
                 HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("\(data.data.max { $0.weight < $1.weight }?.weight ?? "0")")
+                    Text("\(filteredData.max { $0.weight < $1.weight }?.weight ?? "0")")
                         .font(.title)
                     Text("lbs")
                         .foregroundColor(.secondary)
                 }
                 
-                Text("\(formatDate(data.data.first?.date ?? Date())) - \(formatDate(data.data.last?.date ?? Date()))")
+                Text("\(formatDate(filteredData.last?.date ?? Date())) - \(formatDate(filteredData.first?.date ?? Date()))")
                     .foregroundColor(.secondary)
                     .font(.subheadline)
                 

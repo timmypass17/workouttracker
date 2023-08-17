@@ -11,6 +11,11 @@
 		320566B02A81CA4E00129C20 /* ProgressCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320566AF2A81CA4E00129C20 /* ProgressCellView.swift */; };
 		325B41602A82C215001AB323 /* ProgressDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */; };
 		325B41622A82C299001AB323 /* ProgressDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B41612A82C299001AB323 /* ProgressDetailView.swift */; };
+		325FEA712A8D9AAA00A097E7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */; };
+		325FEA732A8D9EE900A097E7 /* WeightUnitTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA722A8D9EE900A097E7 /* WeightUnitTableViewController.swift */; };
+		325FEA752A8D9FB900A097E7 /* WeightType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA742A8D9FB900A097E7 /* WeightType.swift */; };
+		325FEA772A8DAC2400A097E7 /* ThemeTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA762A8DAC2400A097E7 /* ThemeTableViewController.swift */; };
+		325FEA792A8DACD500A097E7 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA782A8DACD500A097E7 /* Theme.swift */; };
 		326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */; };
 		326BA3252A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */; };
 		326BA3272A7EC79E005E9473 /* LoggedWorkout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 326BA3262A7EC79E005E9473 /* LoggedWorkout.swift */; };
@@ -35,6 +40,11 @@
 		320566AF2A81CA4E00129C20 /* ProgressCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCellView.swift; sourceTree = "<group>"; };
 		325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailViewController.swift; sourceTree = "<group>"; };
 		325B41612A82C299001AB323 /* ProgressDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailView.swift; sourceTree = "<group>"; };
+		325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
+		325FEA722A8D9EE900A097E7 /* WeightUnitTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightUnitTableViewController.swift; sourceTree = "<group>"; };
+		325FEA742A8D9FB900A097E7 /* WeightType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeightType.swift; sourceTree = "<group>"; };
+		325FEA762A8DAC2400A097E7 /* ThemeTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeTableViewController.swift; sourceTree = "<group>"; };
+		325FEA782A8DACD500A097E7 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
 		326BA31E2A79A736005E9473 /* WorkoutDetailTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutDetailTableViewController.swift; sourceTree = "<group>"; };
 		326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedWorkoutTableViewController.swift; sourceTree = "<group>"; };
 		326BA3262A7EC79E005E9473 /* LoggedWorkout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedWorkout.swift; sourceTree = "<group>"; };
@@ -109,6 +119,9 @@
 				326BA3242A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift */,
 				320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */,
 				325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */,
+				325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */,
+				325FEA722A8D9EE900A097E7 /* WeightUnitTableViewController.swift */,
+				325FEA762A8DAC2400A097E7 /* ThemeTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -119,6 +132,8 @@
 				326CCA442A71F77C00A4716C /* Workout.swift */,
 				326CCA462A71F90F00A4716C /* Exercise.swift */,
 				326BA3262A7EC79E005E9473 /* LoggedWorkout.swift */,
+				325FEA742A8D9FB900A097E7 /* WeightType.swift */,
+				325FEA782A8DACD500A097E7 /* Theme.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -210,8 +225,12 @@
 				326BA3252A7DAE38005E9473 /* LoggedWorkoutTableViewController.swift in Sources */,
 				320566B02A81CA4E00129C20 /* ProgressCellView.swift in Sources */,
 				325B41622A82C299001AB323 /* ProgressDetailView.swift in Sources */,
+				325FEA792A8DACD500A097E7 /* Theme.swift in Sources */,
 				326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */,
 				326BA3272A7EC79E005E9473 /* LoggedWorkout.swift in Sources */,
+				325FEA752A8D9FB900A097E7 /* WeightType.swift in Sources */,
+				325FEA732A8D9EE900A097E7 /* WeightUnitTableViewController.swift in Sources */,
+				325FEA772A8DAC2400A097E7 /* ThemeTableViewController.swift in Sources */,
 				326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */,
 				326BA32B2A7FE962005E9473 /* Settings.swift in Sources */,
 				326D023B2A75E388006EB616 /* ExerciseTableViewCell.swift in Sources */,
@@ -223,6 +242,7 @@
 				320566AE2A81C6CA00129C20 /* ProgressTableViewController.swift in Sources */,
 				325B41602A82C215001AB323 /* ProgressDetailViewController.swift in Sources */,
 				326CCA472A71F90F00A4716C /* Exercise.swift in Sources */,
+				325FEA712A8D9AAA00A097E7 /* SettingsTableViewController.swift in Sources */,
 				326D023D2A75F32F006EB616 /* WorkoutTitleTableViewCell.swift in Sources */,
 				326D02392A75DE81006EB616 /* AddEditWorkoutTableViewController.swift in Sources */,
 			);

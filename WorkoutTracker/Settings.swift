@@ -7,18 +7,16 @@
 
 import Foundation
 
-
-enum Setting {
-    static let logBadge = "logBadge"
-    static let sortPreference = "sortPreference"
-
-}
-
 enum SortBy: Codable {
     case alphabetically, weight, recent
 }
 
 struct Settings {
+    static let logBadge = "logBadge"
+    static let sortPreference = "sortPreference"
+    static let weightUnit = "weightUnit"
+    static let theme = "theme"
+    
     static var shared = Settings()
     
     private let defaults = UserDefaults.standard
@@ -39,19 +37,37 @@ struct Settings {
     
     var logBadgeValue: Int {
         get {
-            return unarchiveJSON(key: Setting.logBadge) ?? 0
+            return unarchiveJSON(key: Settings.logBadge) ?? 0
         }
         set {
-            archiveJSON(value: newValue, key: Setting.logBadge)
+            archiveJSON(value: newValue, key: Settings.logBadge)
         }
     }
 
     var sortingPreference: SortBy {
         get {
-            return unarchiveJSON(key: Setting.sortPreference) ?? .alphabetically
+            return unarchiveJSON(key: Settings.sortPreference) ?? .alphabetically
         }
         set {
-            archiveJSON(value: newValue, key: Setting.sortPreference)
+            archiveJSON(value: newValue, key: Settings.sortPreference)
+        }
+    }
+    
+    var weightUnit: WeightType {
+        get {
+            return unarchiveJSON(key: Settings.weightUnit) ?? .lbs
+        }
+        set {
+            archiveJSON(value: newValue, key: Settings.weightUnit)
+        }
+    }
+    
+    var theme: Theme {
+        get {
+            return unarchiveJSON(key: Settings.theme) ?? .automatic
+        }
+        set {
+            archiveJSON(value: newValue, key: Settings.theme)
         }
     }
 }
