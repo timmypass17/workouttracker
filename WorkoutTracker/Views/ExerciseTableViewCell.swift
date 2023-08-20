@@ -37,14 +37,12 @@ class ExerciseTableViewCell: UITableViewCell {
     @IBAction func textEditingChanged(_ sender: Any) {
         // Update the exercise with the new values
         let name = nameTextField.text ?? ""
-//        let sets = Int(setsTextField.text ?? "0") ?? 0
-//        let reps = Int(repsTextField.text ?? "0") ?? 0
-//        let weight = Int(weightTextField.text ?? "0") ?? 0
         let sets = setsTextField.text ?? ""
         let reps = repsTextField.text ?? ""
         let weight = weightTextField.text ?? ""
         let isComplete = isCompleteButton.isSelected
-        let exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isComplete)
+        var exercise = Exercise(name: name, sets: sets, reps: reps, weight: "", isComplete: isComplete)
+        exercise.setWeight(weight: weight)
         
         // Notify the delegate that the exercise was updated
         delegate?.exerciseCell(self, didUpdateExercise: exercise)
@@ -58,7 +56,7 @@ class ExerciseTableViewCell: UITableViewCell {
         nameTextField.text = exercise.name
         setsTextField.text = "\(exercise.sets)"
         repsTextField.text = "\(exercise.reps)"
-        weightTextField.text = "\(exercise.weight)"
+        weightTextField.text = "\(exercise.getWeightString())"
         selectionStyle = .none
         showsReorderControl = true
         

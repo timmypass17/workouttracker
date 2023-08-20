@@ -95,6 +95,11 @@ class ProgressTableViewController: UITableViewController {
             selector: #selector(handleLogDataChanged),
             name: LoggedWorkout.logUpdatedNotification, object: nil
         )
+        
+        NotificationCenter.default.addObserver(tableView!,
+            selector: #selector(UITableView.reloadData),
+            name: WeightType.weightUnitUpdatedNotification, object: nil
+        )
     }
     
     @objc func handleLogDataChanged() {
@@ -116,7 +121,7 @@ class ProgressTableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ExerciseProgressCell", for: indexPath)
         let exercisesInSection = data[indexPath.row]
         exercisesInSection.data.sort(by: { $0.date! > $1.date! })
-
+        
         // Create custom cells using SwiftUI
         cell.contentConfiguration = UIHostingConfiguration {
             ExerciseProgressCellView(data: exercisesInSection.data)
@@ -132,8 +137,16 @@ class ProgressTableViewController: UITableViewController {
     @IBSegueAction func showProgressDetail(_ coder: NSCoder, sender: Any?) -> ProgressDetailViewController? {
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)!
-        var item = data[indexPath.row]
-        item.data.sort(by: { $0.date! > $1.date! })
-        return ProgressDetailViewController(coder: coder, data: item)
+        var progressData = data[indexPath.row]
+        progressData.data.sort(by: { $0.date! > $1.date! })
+        
+        // Make a copy of data so that we can change units
+        let newProgressData = ProgressData(name: progressData.name, data: progressData.data)
+        // Convert lifting data to appropriate weight unit
+        for i in newProgressData.data.indices {
+            newProgressData.data[i].weight = newProgressData.data[i].getWeightString()
+        }
+
+        return ProgressDetailViewController(coder: coder, data: newProgressData)
     }
 }

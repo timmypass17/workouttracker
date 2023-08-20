@@ -28,6 +28,11 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             selector: #selector(UITableView.reloadData),
             name: LoggedWorkout.logUpdatedNotification, object: nil
         )
+        
+        NotificationCenter.default.addObserver(tableView!,
+            selector: #selector(UITableView.reloadData),
+            name: WeightType.weightUnitUpdatedNotification, object: nil
+        )
     }
     
     override func viewDidAppear(_ animated: Bool) {

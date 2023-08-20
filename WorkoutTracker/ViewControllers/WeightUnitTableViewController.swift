@@ -51,6 +51,7 @@ class WeightUnitTableViewController: UITableViewController {
         let weightType = WeightType.allCases[indexPath.row]
         Settings.shared.weightUnit = weightType
         delegate?.weightUnitTableViewController(self, didSelect: weightType) // pass parameters to Settings...
+        NotificationCenter.default.post(name: WeightType.weightUnitUpdatedNotification, object: nil)
         tableView.reloadData()
     }
 }

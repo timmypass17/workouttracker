@@ -7,7 +7,7 @@
 
 import Foundation
 
-enum WeightType: CaseIterable, Codable {
+enum WeightType: String, CaseIterable, Codable {
     case lbs, kg
     
     var name: String {
@@ -18,4 +18,6 @@ enum WeightType: CaseIterable, Codable {
             return "Metric (kg)"
         }
     }
+    
+    static let weightUnitUpdatedNotification = Notification.Name("WeightUnit.weightUnitUpdated")
 }

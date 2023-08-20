@@ -26,19 +26,6 @@ class ProgressDetailViewController: UIViewController {
         
         title = data.name
         
-        let sampleData = ProgressData(
-            name: "Squat",
-            data: [
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "45", date: Date()),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "65", date: Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date())),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "50", date: Calendar.current.date(byAdding: .weekOfYear, value: 2, to: Date())),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "55", date: Calendar.current.date(byAdding: .weekOfYear, value: 3, to: Date())),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "60", date: Calendar.current.date(byAdding: .weekOfYear, value: 4, to: Date())),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "60", date: Calendar.current.date(byAdding: .weekOfYear, value: 5, to: Date())),
-                Exercise(name: "Squat", sets: "3", reps: "5", weight: "65", date: Calendar.current.date(byAdding: .weekOfYear, value: 6, to: Date()))
-            ].reversed()
-        )
-        
         let progressDetailView = ProgressDetailView(data: data) // TODO: Use data
         let hostingController = UIHostingController(rootView: progressDetailView)
         
@@ -56,16 +43,4 @@ class ProgressDetailViewController: UIViewController {
         ])
         
     }
-    
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }

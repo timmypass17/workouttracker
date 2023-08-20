@@ -16,7 +16,7 @@ struct ExerciseProgressCellView: View {
             VStack(alignment: .leading, spacing: 4) {
                 ExerciseTitleView(title: data.first!.name, time: Date())
                 HighestWeightView(
-                    highestWeight: data.max { $0.weight < $1.weight }?.weight ?? "0",
+                    highestWeight: data.max { Float($0.weight) ?? 0.0 < Float($1.weight) ?? 0.0 }?.getWeightString(includeUnits: true) ?? "0",
                     recentExercise: data.max(by: { $0.date! < $1.date! })!
                 )
             }
@@ -61,7 +61,7 @@ struct HighestWeightView: View {
     
     var body: some View {
         VStack(alignment: .leading) {
-            Text("Best: \(highestWeight) lbs")
+            Text("Best: \(highestWeight)")
                 .font(.subheadline)
                 .padding(.horizontal, 8)
                 .padding(.vertical, 2)
@@ -69,7 +69,7 @@ struct HighestWeightView: View {
                 .clipShape(RoundedRectangle(cornerRadius: 4))
             
             HStack(alignment: .firstTextBaseline) {
-                Text("Latest: \(recentExercise.weight) lbs")
+                Text("Latest: \(recentExercise.getWeightString(includeUnits: true))")
                     .foregroundColor(.secondary)
                     .font(.caption)
             }

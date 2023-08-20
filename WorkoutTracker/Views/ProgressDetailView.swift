@@ -20,7 +20,6 @@ enum SelectedFilter: String, CaseIterable, Identifiable {
 struct ProgressDetailView: View {
     @ObservedObject var data: ProgressData
     @State private var selectedFilter: SelectedFilter = .all
-    @State private var animate = false
 
     var filteredData: [Exercise] {
         switch selectedFilter {
@@ -44,103 +43,22 @@ struct ProgressDetailView: View {
     var body: some View {
         ScrollView {
             VStack(alignment: .leading) {
-                Picker("Time", selection: $selectedFilter) {
-                    ForEach(SelectedFilter.allCases) { time in
-                        Text(time.rawValue.capitalized)
-                    }
-                }
-                .pickerStyle(.segmented)
+                FilterSegmentedView(selectedFilter: $selectedFilter)
                 
-                
-                Text("Personal Record".uppercased())
-                    .foregroundColor(.secondary)
-                    .font(.subheadline)
-                HStack(alignment: .firstTextBaseline, spacing: 4) {
-                    Text("\(filteredData.max { $0.weight < $1.weight }?.weight ?? "0")")
-                        .font(.title)
-                    Text("lbs")
-                        .foregroundColor(.secondary)
-                }
-                
-                Text("\(formatDate(filteredData.last?.date ?? Date())) - \(formatDate(filteredData.first?.date ?? Date()))")
-                    .foregroundColor(.secondary)
-                    .font(.subheadline)
-                
-                Chart(filteredData) { exercise in
-                    LineMark(x: .value("Time", exercise.date ?? Date()),
-                             y: .value("Beats Per Minute", Float(exercise.weight)!))
-                    .symbol(Circle().strokeBorder(lineWidth: 2))
-                    .symbolSize(CGSize(width: 6, height: 6))
-        //            .foregroundStyle(.pink)
-                }
-                .chartYScale(domain: .automatic(includesZero: false))
-                .frame(height: 300)
+                ProgressTitleView(filteredData: filteredData)
+
+                ProgressChartView(filteredData: filteredData)
                 
                 Divider()
                     .padding(.vertical, 4)
                 
-                HStack {
-                    Text("History".uppercased())
-                    
-                    Spacer()
-                    
-                    Text("\(filteredData.count) Workouts".uppercased())
-                }
-                .foregroundColor(.secondary)
-                .font(.subheadline)
-                
-                ForEach(Array(filteredData.enumerated()), id: \.offset) { i, exercise in
-                    
-                    Divider()
-                    
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            Text("\(exercise.weight) lbs")
-                                .font(.headline)
-                            
-                            //"60lbs 3x5 Sep 20, 2023"
-                            Text("\(filteredData[i].sets)x\(filteredData[i].reps) \(filteredData[i].name) at \(formatDate(filteredData[i].date!))")
-                                .font(.subheadline)
-                                .foregroundColor(.gray)
-                        }
-                        Spacer()
-                        
-                        // last element case
-                        if i == filteredData.count - 1 {
-                            Text("-")
-                                .foregroundColor(.secondary)
-                        } else {
-                            let weight = Float(filteredData[i].weight)!
-                            let previousWeight = Float(filteredData[i + 1].weight)!
-                            let difference = weight - previousWeight
-                            if difference > 0 {
-                                // More weight
-                                Text("+\(formatFloat(difference)) lbs")
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-//                                    .frame(width: 70, height: 25)
-                                    .overlay(Color.green.opacity(0.15))
-                                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                            } else if difference < 0 {
-                                // Less weight
-                                Text("\(formatFloat(difference)) lbs")
-                                    .padding(.horizontal, 8)
-                                    .padding(.vertical, 2)
-                                    .overlay(Color.red.opacity(0.15))
-                                    .clipShape(RoundedRectangle(cornerRadius: 4))
-                            } else {
-                                // No weight gain
-                                Text("-")
-                                    .foregroundColor(.secondary)
-                            }
-                        }
-                    }
-                    .padding(8)
-                }
+                ProgressListView(filteredData: filteredData)
             }
             .padding()
             .animation(.default, value: filteredData.count) // animation trigger when value changes
-
+        }
+        .onAppear {
+            print(filteredData.map { $0.weight })
         }
     }
     
@@ -159,7 +77,6 @@ struct ProgressDetailView: View {
     }
 }
 
-//Calendar.current.date(byAdding: .weekOfYear, value: 1, to: Date())
 struct ProgressDetailView_Previews: PreviewProvider {
     static let sampleData = ProgressData(
         name: "Squat",
@@ -176,5 +93,149 @@ struct ProgressDetailView_Previews: PreviewProvider {
     
     static var previews: some View {
         ProgressDetailView(data: sampleData)
+    }
+}
+
+struct FilterSegmentedView: View {
+    @Binding var selectedFilter: SelectedFilter
+    
+    var body: some View {
+        Picker("Time", selection: $selectedFilter) {
+            ForEach(SelectedFilter.allCases) { time in
+                Text(time.rawValue.capitalized)
+            }
+        }
+        .pickerStyle(.segmented)
+    }
+}
+
+struct ProgressTitleView: View {
+    var filteredData: [Exercise]
+    
+    var personalRecordWeight: String {
+        return filteredData.max { Float($0.weight) ?? 0.0 < Float($1.weight) ?? 0.0 }?.weight ?? ""
+    }
+    
+    var dateRangeString: String {
+        let startDate = filteredData.last?.date ?? Date()
+        let endDate = filteredData.first?.date ?? Date()
+        return "\(formatDate(startDate)) - \(formatDate(endDate))"
+    }
+    
+    var body: some View {
+        Text("Personal Record".uppercased())
+            .foregroundColor(.secondary)
+            .font(.subheadline)
+        HStack(alignment: .firstTextBaseline, spacing: 4) {
+            Text(personalRecordWeight)
+                .font(.title)
+            Text(Settings.shared.weightUnit.rawValue)
+                .foregroundColor(.secondary)
+        }
+        
+        Text(dateRangeString)
+            .foregroundColor(.secondary)
+            .font(.subheadline)
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy"
+        return formatter.string(from: date)
+    }
+}
+
+struct ProgressListView: View {
+    var filteredData: [Exercise]
+
+    var body: some View {
+        HStack {
+            Text("History".uppercased())
+            
+            Spacer()
+            
+            Text("\(filteredData.count) Workouts".uppercased())
+        }
+        .foregroundColor(.secondary)
+        .font(.subheadline)
+        
+        ForEach(Array(filteredData.enumerated()), id: \.offset) { i, exercise in
+            
+            Divider()
+            
+            HStack {
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(exercise.weight) \(Settings.shared.weightUnit.rawValue)")
+                        .font(.headline)
+                    
+                    //"60lbs 3x5 Sep 20, 2023"
+                    Text("\(filteredData[i].sets)x\(filteredData[i].reps) \(filteredData[i].name) at \(formatDate(filteredData[i].date!))")
+                        .font(.subheadline)
+                        .foregroundColor(.gray)
+                }
+                Spacer()
+                
+                // last element case
+                if i == filteredData.count - 1 {
+                    Text("-")
+                        .foregroundColor(.secondary)
+                } else {
+                    let weight = Float(filteredData[i].weight)!
+                    let previousWeight = Float(filteredData[i + 1].weight)!
+                    let difference = weight - previousWeight
+                    if difference > 0 {
+                        // More weight
+                        Text("+\(formatFloat(difference)) \(Settings.shared.weightUnit.rawValue)")
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+//                                    .frame(width: 70, height: 25)
+                            .overlay(Color.green.opacity(0.15))
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                    } else if difference < 0 {
+                        // Less weight
+                        Text("\(formatFloat(difference)) \(Settings.shared.weightUnit.rawValue)")
+                            .padding(.horizontal, 8)
+                            .padding(.vertical, 2)
+                            .overlay(Color.red.opacity(0.15))
+                            .clipShape(RoundedRectangle(cornerRadius: 4))
+                    } else {
+                        // No weight gain
+                        Text("-")
+                            .foregroundColor(.secondary)
+                    }
+                }
+            }
+            .padding(8)
+        }
+    }
+    
+    func formatFloat(_ floatValue: Float) -> String {
+        let formatter = NumberFormatter()
+        formatter.minimumFractionDigits = 0
+        formatter.maximumFractionDigits = 2 // You can adjust this as needed
+        
+        return formatter.string(from: NSNumber(value: floatValue)) ?? "\(floatValue)"
+    }
+    
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM d, yyyy"
+        return formatter.string(from: date)
+    }
+}
+
+struct ProgressChartView: View {
+    var filteredData: [Exercise]
+
+    var body: some View {
+        Chart(filteredData) { exercise in
+            LineMark(x: .value("Time", exercise.date ?? Date()),
+                     y: .value("Beats Per Minute", Float(exercise.weight)!))
+            .symbol(Circle().strokeBorder(lineWidth: 2))
+            .symbolSize(CGSize(width: 6, height: 6))
+            //            .foregroundStyle(.pink)
+        }
+        .chartYScale(domain: .automatic(includesZero: false))
+        .frame(height: 300)
     }
 }

@@ -32,6 +32,7 @@ struct Settings {
               let data = string.data(using: .utf8) else {
             return nil
         }
+        
         return try! JSONDecoder().decode(T.self, from: data)
     }
     

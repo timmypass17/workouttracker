@@ -31,7 +31,7 @@ class LoggedWorkoutTableViewCell: UITableViewCell {
         dayLabel.text = "\(Calendar.current.component(.day, from: workout.startTime!))"
         workoutLabel.text = workout.name
         exercisesLabel.text = workout.exercises
-            .map { "\($0.sets)x\($0.reps) \($0.name) - \($0.weight)lbs" }.joined(separator: "\n")
+            .map { "\($0.sets)x\($0.reps) \($0.name) - \($0.getWeightString(includeUnits: true))" }.joined(separator: "\n")
         barView.isHidden = !Calendar.current.isDate(workout.startTime!, inSameDayAs: Date())
     }
 }

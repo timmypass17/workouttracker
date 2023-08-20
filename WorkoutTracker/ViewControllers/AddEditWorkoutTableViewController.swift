@@ -74,7 +74,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         } else {
             // Handle new workout
             exercises.append(Exercise(name: "", sets: "", reps: "", weight: "", date: Date()))
-            print(exercises)
             // Set to edit mode (i.e. Display red deletion and rearrange buttons)
             tableView.setEditing(true, animated: true)
             
@@ -84,6 +83,11 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             self.navigationItem.leftBarButtonItem = cancelButtonItem
             self.navigationItem.rightBarButtonItem = saveButtonItem
         }
+        
+        NotificationCenter.default.addObserver(tableView!,
+            selector: #selector(UITableView.reloadData),
+            name: WeightType.weightUnitUpdatedNotification, object: nil
+        )
     }
     
     override func setEditing(_ editing: Bool, animated: Bool) {
@@ -104,11 +108,11 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             // Update existing workout
             let titleCell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
             let title = titleCell.titleTextField.text!
-            let exercises = exercises.filter { !$0.name.isEmpty || !$0.sets.isEmpty || !$0.reps.isEmpty || !$0.weight.isEmpty } // remove empty cells
+            var exercises = exercises.filter { !$0.name.isEmpty || !$0.sets.isEmpty || !$0.reps.isEmpty || !$0.weight.isEmpty } // remove empty cells
+            
             let workout = Workout(id: workout.id, name: title, exercises: exercises)
             
             delegate?.updateWorkout(sender: self, workout: workout)
-//            delegate?.didUpdateExercises(sender: self, exercises: exercises)
         }
     }
     
@@ -271,28 +275,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
         saveAction(sender: sender)
     }
-    
-//    @IBAction func finishButtonTapped(_ sender: UIButton) {
-//        let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
-//        let name = cell.titleTextField.text!
-//        let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
-//
-//        let dateFormatter = DateFormatter()
-//        dateFormatter.dateFormat = "MMMM yyyy"
-//        let sectionKey = dateFormatter.string(from: workoutToSave.startTime!) // "August 2023"
-//
-//        if LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] == nil {
-//            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] = []
-//        }
-//        LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.insert(workoutToSave, at: 0)
-//
-//        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
-//
-//        Settings.shared.logBadgeValue += 1
-//        NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
-//        saveAction(sender: sender)
-//    }
-//
+
     @IBAction func returnPressed(_ sender: UITextField) {
         sender.resignFirstResponder()
     }
@@ -304,7 +287,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         let date = exercises[indexPath.row].date
         exercises[indexPath.row] = exercise
         exercises[indexPath.row].date = date
-        print(exercises[indexPath.row])
         updateFinishButtonState()
     }
     
