@@ -23,9 +23,30 @@ class ExerciseTableViewCell: UITableViewCell {
     
     weak var delegate: ExerciseTableViewCellDelegate?
     
+    var toolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(
+            title: "Done",
+            style: .plain,
+            target: self,
+            action: #selector(doneButtonTapped)
+        )
+        
+        toolbar.items = [.flexibleSpace(), doneButton]
+        return toolbar
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        
+        nameTextField.inputAccessoryView = toolbar
+        setsTextField.inputAccessoryView = toolbar
+        repsTextField.inputAccessoryView = toolbar
+        weightTextField.inputAccessoryView = toolbar
+        
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -61,6 +82,12 @@ class ExerciseTableViewCell: UITableViewCell {
         showsReorderControl = true
         
         isCompleteButton.isEnabled = !exercise.isEditing  // Enable or disable the button based on the isEditing property
+    }
+    
+    @objc func doneButtonTapped(){
+        if let activeTextField = [nameTextField, setsTextField, repsTextField, weightTextField].first(where: { $0.isFirstResponder }) {
+            activeTextField.resignFirstResponder()
+        }
     }
 
 }

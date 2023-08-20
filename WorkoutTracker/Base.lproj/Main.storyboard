@@ -399,17 +399,17 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Contact Us" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="RkI-Uc-ex7">
-                                                    <rect key="frame" x="59" y="0.0" width="292.66666666666669" height="43.666667938232422"/>
+                                                    <rect key="frame" x="60.333333333333314" y="0.0" width="291.33333333333337" height="43.666667938232422"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="X0O-UJ-eve">
-                                                    <rect key="frame" x="22.166666666666664" y="13.000000000000002" width="19.666666666666668" height="17.666666666666668"/>
+                                                    <rect key="frame" x="18.666666666666664" y="13.333333333333336" width="26.666666666666668" height="17"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <color key="tintColor" systemColor="systemPurpleColor"/>
-                                                    <imageReference key="image" image="phone.fill" catalog="system" symbolScale="medium"/>
+                                                    <imageReference key="image" image="person.2.fill" catalog="system" symbolScale="medium"/>
                                                 </imageView>
                                             </subviews>
                                         </tableViewCellContentView>
@@ -620,7 +620,7 @@
         <scene sceneID="Lnr-oY-YVc">
             <objects>
                 <tableViewController id="6DW-bu-S0v" customClass="AddEditWorkoutTableViewController" customModule="WorkoutTracker" customModuleProvider="target" sceneMemberID="viewController">
-                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" id="XS8-4q-RFC">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" keyboardDismissMode="onDrag" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" estimatedSectionHeaderHeight="-1" sectionFooterHeight="28" estimatedSectionFooterHeight="-1" id="XS8-4q-RFC">
                         <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <stackView key="tableFooterView" opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" spacing="16" id="FiA-Wu-twX">
@@ -684,7 +684,7 @@
                                 </tableViewCellContentView>
                                 <connections>
                                     <outlet property="letterImageView" destination="wIq-SG-Pqd" id="dVk-Pa-GQx"/>
-                                    <outlet property="titleTextField" destination="bHZ-NK-3dd" id="10n-N6-Ae8"/>
+                                    <outlet property="titleTextField" destination="bHZ-NK-3dd" id="ehO-Y9-y8J"/>
                                 </connections>
                             </tableViewCell>
                             <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ExerciseCell" id="qIt-Wg-TDD" customClass="ExerciseTableViewCell" customModule="WorkoutTracker" customModuleProvider="target">
@@ -722,7 +722,7 @@
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="3" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="s2Y-O9-GAy">
                                                     <rect key="frame" x="184" y="0.0" width="43" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                     <connections>
                                                         <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="e6X-Zh-ruY"/>
                                                     </connections>
@@ -730,7 +730,7 @@
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="5" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="dR6-33-3fi">
                                                     <rect key="frame" x="234.99999999999997" y="0.0" width="42.666666666666657" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="numberPad"/>
                                                     <connections>
                                                         <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="gLW-U9-MWT"/>
                                                     </connections>
@@ -738,7 +738,7 @@
                                                 <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="135" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="lzs-hf-EQW">
                                                     <rect key="frame" x="285.66666666666669" y="0.0" width="64.333333333333314" height="34.333333333333336"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" keyboardType="decimalPad"/>
                                                     <connections>
                                                         <action selector="textEditingChanged:" destination="qIt-Wg-TDD" eventType="editingChanged" id="EfS-9l-hDJ"/>
                                                     </connections>
@@ -782,7 +782,7 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Plm-QR-ogU" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
                 <exit id="eEx-pd-Bbc" userLabel="Exit" sceneMemberID="exit"/>
             </objects>
-            <point key="canvasLocation" x="2040" y="1520"/>
+            <point key="canvasLocation" x="2040" y="1627"/>
         </scene>
         <!--Progress-->
         <scene sceneID="y7V-Hm-FQF">
@@ -839,7 +839,7 @@
         <image name="moon.stars.fill" catalog="system" width="125" height="128"/>
         <image name="p.circle.fill" catalog="system" width="128" height="123"/>
         <image name="paintbrush.pointed.fill" catalog="system" width="128" height="118"/>
-        <image name="phone.fill" catalog="system" width="128" height="114"/>
+        <image name="person.2.fill" catalog="system" width="128" height="81"/>
         <image name="scalemass.fill" catalog="system" width="128" height="121"/>
         <image name="scroll.fill" catalog="system" width="128" height="116"/>
         <image name="shield.fill" catalog="system" width="128" height="121"/>

@@ -25,7 +25,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     
     let titleTextFieldIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: AddEditWorkoutTableViewControllerDelegate?
-
+    
     init?(coder: NSCoder, workout: Workout?, isLogged: Bool = false) {
         self.workout = workout
         self.isLogged = isLogged
@@ -307,4 +307,5 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             $0.isComplete == true && !$0.name.isEmpty && !$0.sets.isEmpty && !$0.reps.isEmpty && !$0.weight.isEmpty
         }
     }
+    
 }

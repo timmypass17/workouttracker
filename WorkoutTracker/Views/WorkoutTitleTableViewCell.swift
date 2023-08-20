@@ -12,9 +12,25 @@ class WorkoutTitleTableViewCell: UITableViewCell {
     @IBOutlet var titleTextField: UITextField!
     @IBOutlet var letterImageView: UIImageView!
     
+    var toolbar: UIToolbar = {
+        let toolbar = UIToolbar()
+        toolbar.sizeToFit()
+        
+        let doneButton = UIBarButtonItem(
+            title: "Done",
+            style: .plain,
+            target: self,
+            action: #selector(doneButtonTapped)
+        )
+        
+        toolbar.items = [.flexibleSpace(), doneButton]
+        return toolbar
+    }()
+    
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        titleTextField.inputAccessoryView = toolbar
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -41,6 +57,11 @@ class WorkoutTitleTableViewCell: UITableViewCell {
         } else {
             letterImageView.image = UIImage(systemName: "p.circle.fill")
         }
+    }
+
+    
+    @objc func doneButtonTapped(){
+        titleTextField.resignFirstResponder()
     }
 
 }
