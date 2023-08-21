@@ -13,7 +13,7 @@ struct Workout {
     var name: String
     var exercises: [Exercise]
     var icon: UIImage? {
-        return UIImage(systemName: "\(name.first!.lowercased()).circle.fill")
+        return UIImage(systemName: "\(name.first?.lowercased() ?? "p").circle.fill")
     }
     
     var startTime: Date?

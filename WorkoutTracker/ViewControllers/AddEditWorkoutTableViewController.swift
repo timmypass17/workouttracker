@@ -14,7 +14,7 @@ protocol AddEditWorkoutTableViewControllerDelegate: AnyObject {
 
 //protocol AddEditWorkoutTableViewControllerDelegate
 
-class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableViewCellDelegate {
+class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableViewCellDelegate, WorkoutTitleTableViewCellDelegate {
     
     @IBOutlet var finishButton: UIButton!
     
@@ -25,6 +25,8 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     
     let titleTextFieldIndexPath = IndexPath(row: 0, section: 0)
     weak var delegate: AddEditWorkoutTableViewControllerDelegate?
+    
+    var saveButtonItem: UIBarButtonItem?
     
     init?(coder: NSCoder, workout: Workout?, isLogged: Bool = false) {
         self.workout = workout
@@ -78,9 +80,10 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             
             // Bar buttons
             let cancelButtonItem = UIBarButtonItem(title: "Cancel", style: .plain, target: self, action:#selector(cancelAction))
-            let saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action:#selector(saveAction))
+            saveButtonItem = UIBarButtonItem(title: "Save", style: .plain, target: self, action:#selector(saveAction))
             self.navigationItem.leftBarButtonItem = cancelButtonItem
             self.navigationItem.rightBarButtonItem = saveButtonItem
+            saveButtonItem?.isEnabled = false
         }
         
         NotificationCenter.default.addObserver(tableView!,
@@ -115,10 +118,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         }
     }
     
-    @objc func yourButtonTapped() {
-            // Handle button tap
-        }
-    
     @objc func saveAction(sender: UIButton!) {
         performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
     }
@@ -145,6 +144,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         if indexPath == titleTextFieldIndexPath {
             let cell = tableView.dequeueReusableCell(withIdentifier: "WorkoutTitleCell", for: indexPath) as! WorkoutTitleTableViewCell
+            cell.delegate = self
             if let workout = workout {
                 cell.update(with: workout)
             }
@@ -321,4 +321,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         }
     }
     
+    func workoutTitleTableViewCell(_ cell: WorkoutTitleTableViewCell, didUpdateTitle title: String) {
+        saveButtonItem?.isEnabled = !title.isEmpty
+    }
 }

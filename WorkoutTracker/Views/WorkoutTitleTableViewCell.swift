@@ -7,11 +7,18 @@
 
 import UIKit
 
+protocol WorkoutTitleTableViewCellDelegate: AnyObject {
+    func workoutTitleTableViewCell(_ cell: WorkoutTitleTableViewCell, didUpdateTitle title: String)
+}
+
+
 class WorkoutTitleTableViewCell: UITableViewCell {
 
     @IBOutlet var titleTextField: UITextField!
     @IBOutlet var letterImageView: UIImageView!
     
+    weak var delegate: WorkoutTitleTableViewCellDelegate?
+
     var toolbar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
@@ -41,6 +48,7 @@ class WorkoutTitleTableViewCell: UITableViewCell {
     
     @IBAction func titleEditingChanged(_ sender: Any) {
         updateIcon()
+        delegate?.workoutTitleTableViewCell(self, didUpdateTitle: titleTextField.text ?? "")
     }
     
     func update(with workout: Workout) {
