@@ -65,7 +65,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             
             finishButton.addTarget(self, action: #selector(finishButtonTapped(_:)), for: .touchUpInside)
 
-            
             // Clear checkmarks
             for i in 0..<exercises.count {
                 exercises[i].isComplete = false
@@ -97,11 +96,11 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
         for i in 0..<exercises.count {
             exercises[i].isEditing = editing
         }
-        
+
         // Reload the table view to update the button's state
         tableView.reloadData()
     }
-    
+
     override func viewDidDisappear(_ animated: Bool) {
         // Save changes to exercises when users presses "back" button. Can't really add action to back button directly
         if let workout = workout {
@@ -180,7 +179,8 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     // MARK: - Edit methods
 
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return indexPath != titleTextFieldIndexPath
+        let exerciseSection = 1
+        return indexPath.section == exerciseSection
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -194,6 +194,18 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     override func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
         let movedExercise = exercises.remove(at: sourceIndexPath.row)
         exercises.insert(movedExercise, at: destinationIndexPath.row)
+    }
+    
+    override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
+        // Limit reordering to only it's own section
+        if sourceIndexPath.section != proposedDestinationIndexPath.section {
+            var row = 0
+            if sourceIndexPath.section < proposedDestinationIndexPath.section {
+                row = self.tableView(tableView, numberOfRowsInSection: sourceIndexPath.section) - 1
+            }
+            return IndexPath(row: row, section: sourceIndexPath.section)
+        }
+        return proposedDestinationIndexPath
     }
     
     // MARK: - Navigation methods
@@ -295,6 +307,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             var exercise = exercises[indexPath.row]
             exercise.date = Date()
             exercise.isComplete.toggle()
+//            exercise.isComplete = true
             exercises[indexPath.row] = exercise
             tableView.reloadRows(at: [indexPath], with: .automatic) // calls tableview(cellForRowAt:)
 //            ToDo.saveToDos(toDos)

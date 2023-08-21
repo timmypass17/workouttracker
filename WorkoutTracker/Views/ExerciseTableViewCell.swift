@@ -22,7 +22,8 @@ class ExerciseTableViewCell: UITableViewCell {
     @IBOutlet var isCompleteButton: UIButton!
     
     weak var delegate: ExerciseTableViewCellDelegate?
-    
+    let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium) // Choose a haptic feedback style
+
     var toolbar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
@@ -46,7 +47,7 @@ class ExerciseTableViewCell: UITableViewCell {
         setsTextField.inputAccessoryView = toolbar
         repsTextField.inputAccessoryView = toolbar
         weightTextField.inputAccessoryView = toolbar
-        
+        feedbackGenerator.prepare()
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
@@ -70,6 +71,7 @@ class ExerciseTableViewCell: UITableViewCell {
     }
     
     @IBAction func completeButtonTapped(_ sender: UIButton) {
+        feedbackGenerator.impactOccurred()
         delegate?.checkmarkTapped(sender: self)
     }
     
@@ -77,9 +79,9 @@ class ExerciseTableViewCell: UITableViewCell {
         nameTextField.text = exercise.name
         setsTextField.text = "\(exercise.sets)"
         repsTextField.text = "\(exercise.reps)"
-        weightTextField.text = "\(exercise.getWeightString())"
-        selectionStyle = .none
-        showsReorderControl = true
+        weightTextField.text = exercise.weight == "" ? "" : "\(exercise.getWeightString())"
+        selectionStyle = .none  // disable highligh when clicking row
+//        showsReorderControl = true
         
         isCompleteButton.isEnabled = !exercise.isEditing  // Enable or disable the button based on the isEditing property
     }
@@ -91,3 +93,4 @@ class ExerciseTableViewCell: UITableViewCell {
     }
 
 }
+

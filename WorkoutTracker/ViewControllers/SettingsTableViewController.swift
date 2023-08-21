@@ -9,10 +9,11 @@ import UIKit
 import SafariServices
 import MessageUI
 
-class SettingsTableViewController: UITableViewController, WeightUnitTableViewControllerDelegate, ThemeTableViewControllerDelegate, MFMailComposeViewControllerDelegate {
+class SettingsTableViewController: UITableViewController, WeightUnitTableViewControllerDelegate, ThemeTableViewControllerDelegate, AccentColorTableViewControllerDelegate, MFMailComposeViewControllerDelegate {
     
     @IBOutlet var weightTypeLabel: UILabel!
     @IBOutlet var themeLabel: UILabel!
+    @IBOutlet var colorLabel: UILabel!
     
     let contactUsIndexPath = IndexPath(row: 0, section: 2)
     let bugReportIndexPath = IndexPath(row: 1, section: 2)
@@ -47,21 +48,27 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         }
     }
     
-    @IBSegueAction func showWeightUnit(_ coder: NSCoder, sender: Any?) -> WeightUnitTableViewController? {
+    @IBSegueAction func showWeightUnit(_ coder: NSCoder) -> WeightUnitTableViewController? {
         let weightUnitTableViewController = WeightUnitTableViewController(coder: coder)
         weightUnitTableViewController?.delegate = self
         return weightUnitTableViewController
     }
     
-    @IBSegueAction func showTheme(_ coder: NSCoder, sender: Any?) -> ThemeTableViewController? {
+    @IBSegueAction func showTheme(_ coder: NSCoder) -> ThemeTableViewController? {
         let themeTableViewController = ThemeTableViewController(coder: coder)
         themeTableViewController?.delegate = self
         return themeTableViewController
     }
     
+    @IBSegueAction func showAccentColor(_ coder: NSCoder) -> AccentColorTableViewController? {
+        let accentColorTableViewController = AccentColorTableViewController(coder: coder)
+        accentColorTableViewController?.delegate = self
+        return accentColorTableViewController
+    }
     func updateView() {
         weightTypeLabel.text = Settings.shared.weightUnit.name
         themeLabel.text = Settings.shared.theme.name
+        colorLabel.text = Settings.shared.accentColor.rawValue.capitalized
     }
     
     func weightUnitTableViewController(_ controller: WeightUnitTableViewController, didSelect weightType: WeightType) {
@@ -107,4 +114,9 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
             tableView.deselectRow(at: selectedIndexPath, animated: true)
         }
     }
+    
+    func accentColorTableViewController(_ controller: AccentColorTableViewController, didSelect accentColor: AccentColor) {
+        updateView()
+    }
+    
 }

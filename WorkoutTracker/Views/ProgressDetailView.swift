@@ -146,6 +146,8 @@ struct ProgressTitleView: View {
 }
 
 struct ProgressListView: View {
+    @Environment(\.colorScheme) var colorScheme
+
     var filteredData: [Exercise]
 
     var body: some View {
@@ -189,14 +191,14 @@ struct ProgressListView: View {
                             .padding(.horizontal, 8)
                             .padding(.vertical, 2)
 //                                    .frame(width: 70, height: 25)
-                            .overlay(Color.green.opacity(0.15))
+                            .background(Color.ui.green)
                             .clipShape(RoundedRectangle(cornerRadius: 4))
                     } else if difference < 0 {
                         // Less weight
                         Text("\(formatFloat(difference)) \(Settings.shared.weightUnit.rawValue)")
                             .padding(.horizontal, 8)
                             .padding(.vertical, 2)
-                            .overlay(Color.red.opacity(0.15))
+                            .background(Color.ui.red)
                             .clipShape(RoundedRectangle(cornerRadius: 4))
                     } else {
                         // No weight gain

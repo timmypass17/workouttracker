@@ -18,8 +18,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
         guard let _ = (scene as? UIWindowScene) else { return }
         
+        // Init user preferences
         updateTheme()
-
+        updateAccentColor()
+        
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateOrderBadge),
                                                name: LoggedWorkout.logUpdatedNotification,
@@ -28,6 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         NotificationCenter.default.addObserver(self,
                                                selector: #selector(updateTheme),
                                                name: Theme.themeUpdatedNotification,
+                                               object: nil)
+        
+        NotificationCenter.default.addObserver(self,
+                                               selector: #selector(updateAccentColor),
+                                               name: AccentColor.accentColorUpdatedNotification,
                                                object: nil)
 
         logTabBarItem = (window?.rootViewController as? UITabBarController)?.viewControllers?[1].tabBarItem
@@ -50,6 +57,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         case .dark:
             self.window?.overrideUserInterfaceStyle = .dark
         }
+    }
+    
+    @objc func updateAccentColor() {
+        window?.tintColor = Settings.shared.accentColor.color
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

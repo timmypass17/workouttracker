@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import SwiftUI
 
 enum SortBy: Codable {
     case alphabetically, weight, recent
@@ -16,6 +17,7 @@ struct Settings {
     static let sortPreference = "sortPreference"
     static let weightUnit = "weightUnit"
     static let theme = "theme"
+    static let accentColor = "accentColor"
     
     static var shared = Settings()
     
@@ -70,5 +72,23 @@ struct Settings {
         set {
             archiveJSON(value: newValue, key: Settings.theme)
         }
+    }
+    
+    var accentColor: AccentColor {
+        get {
+            return unarchiveJSON(key: Settings.accentColor) ?? .blue
+        }
+        set {
+            archiveJSON(value: newValue, key: Settings.accentColor)
+        }
+    }
+}
+
+extension Color {
+    static let ui = Color.UI()
+    
+    struct UI {
+        let green = Color("green")
+        let red = Color("red")
     }
 }

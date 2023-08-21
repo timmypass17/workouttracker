@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		320566AE2A81C6CA00129C20 /* ProgressTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */; };
 		320566B02A81CA4E00129C20 /* ProgressCellView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 320566AF2A81CA4E00129C20 /* ProgressCellView.swift */; };
+		321FAB322A92EAC0007E208B /* AccentColorTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 321FAB312A92EAC0007E208B /* AccentColorTableViewController.swift */; };
 		325B41602A82C215001AB323 /* ProgressDetailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */; };
 		325B41622A82C299001AB323 /* ProgressDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325B41612A82C299001AB323 /* ProgressDetailView.swift */; };
 		325FEA712A8D9AAA00A097E7 /* SettingsTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */; };
@@ -38,6 +39,7 @@
 /* Begin PBXFileReference section */
 		320566AD2A81C6CA00129C20 /* ProgressTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressTableViewController.swift; sourceTree = "<group>"; };
 		320566AF2A81CA4E00129C20 /* ProgressCellView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressCellView.swift; sourceTree = "<group>"; };
+		321FAB312A92EAC0007E208B /* AccentColorTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccentColorTableViewController.swift; sourceTree = "<group>"; };
 		325B415F2A82C215001AB323 /* ProgressDetailViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailViewController.swift; sourceTree = "<group>"; };
 		325B41612A82C299001AB323 /* ProgressDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressDetailView.swift; sourceTree = "<group>"; };
 		325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewController.swift; sourceTree = "<group>"; };
@@ -122,6 +124,7 @@
 				325FEA702A8D9AAA00A097E7 /* SettingsTableViewController.swift */,
 				325FEA722A8D9EE900A097E7 /* WeightUnitTableViewController.swift */,
 				325FEA762A8DAC2400A097E7 /* ThemeTableViewController.swift */,
+				321FAB312A92EAC0007E208B /* AccentColorTableViewController.swift */,
 			);
 			path = ViewControllers;
 			sourceTree = "<group>";
@@ -229,6 +232,7 @@
 				326CCA292A70C18E00A4716C /* AppDelegate.swift in Sources */,
 				326BA3272A7EC79E005E9473 /* LoggedWorkout.swift in Sources */,
 				325FEA752A8D9FB900A097E7 /* WeightType.swift in Sources */,
+				321FAB322A92EAC0007E208B /* AccentColorTableViewController.swift in Sources */,
 				325FEA732A8D9EE900A097E7 /* WeightUnitTableViewController.swift in Sources */,
 				325FEA772A8DAC2400A097E7 /* ThemeTableViewController.swift in Sources */,
 				326BA31F2A79A736005E9473 /* WorkoutDetailTableViewController.swift in Sources */,
