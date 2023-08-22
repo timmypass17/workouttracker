@@ -13,6 +13,7 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
     
     @IBOutlet var weightTypeLabel: UILabel!
     @IBOutlet var themeLabel: UILabel!
+//    @IBOutlet var brushImageView: UIImageView!
     @IBOutlet var colorLabel: UILabel!
     
     let contactUsIndexPath = IndexPath(row: 0, section: 2)
@@ -22,7 +23,6 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         case units
         case appearance
         case help
-        case legal
     }
         
     override func viewDidLoad() {
@@ -43,7 +43,7 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         switch sectionCase {
         case .units:
             return 1
-        case .appearance, .help, .legal:
+        case .appearance, .help:
             return 2
         }
     }
@@ -69,6 +69,7 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         weightTypeLabel.text = Settings.shared.weightUnit.name
         themeLabel.text = Settings.shared.theme.name
         colorLabel.text = Settings.shared.accentColor.rawValue.capitalized
+//        brushImageView.tintColor = Settings.shared.accentColor.color
     }
     
     func weightUnitTableViewController(_ controller: WeightUnitTableViewController, didSelect weightType: WeightType) {
