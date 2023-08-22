@@ -11,6 +11,16 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     
     var workouts: [Workout] = []
     
+    var emptyLabel: UILabel {
+        let label = UILabel()
+        label.text = "Your workout data will appear here.\nTap the '+' button to add your first workout."
+        label.textAlignment = .center
+        label.textColor = .secondaryLabel
+        label.font = UIFont.systemFont(ofSize: 18)
+        label.numberOfLines = 0
+        return label
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -19,6 +29,13 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
         } else {
             workouts = Workout.sampleWorkouts
         }
+        
+        updateView()
+    }
+    
+    func updateView() {
+        tableView.backgroundView = emptyLabel
+        tableView.backgroundView?.isHidden = workouts.isEmpty ? false : true
     }
     
     // MARK: - Table view data source
@@ -52,6 +69,7 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
             workouts.remove(at: indexPath.row)
             tableView.deleteRows(at: [indexPath], with: .automatic)
             Workout.saveWorkouts(workouts)
+            updateView()
         }
     }
     
@@ -103,6 +121,7 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
         
+        updateView()
         Workout.saveWorkouts(workouts)
     }
     

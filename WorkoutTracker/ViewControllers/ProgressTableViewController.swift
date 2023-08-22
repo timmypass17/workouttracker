@@ -24,6 +24,15 @@ class ProgressTableViewController: UITableViewController {
     
     var data: [ProgressData] = []
     
+    var emptyLabel: UILabel {
+        let label = UILabel()
+        label.text = "Your workout data will appear here."
+        label.textAlignment = .center
+        label.textColor = .secondaryLabel
+        label.font = UIFont.systemFont(ofSize: 18)
+        return label
+    }
+    
     var sortByWeight: (ProgressData, ProgressData) -> Bool = { exercise, otherExercise in
         let maxWeightExercise = exercise.data.max(by: { $0.weight < $1.weight })?.weight ?? "0"
         let maxWeightOtherExercise = otherExercise.data.max(by: { $0.weight < $1.weight })?.weight ?? "0"
@@ -63,7 +72,7 @@ class ProgressTableViewController: UITableViewController {
         return UIMenu(title: "Sort By", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
-    func updateUI() {
+    @objc func updateView() {
         data = LoggedWorkout.shared.loggedWorkoutsBySection.values
             .flatMap { $0 }
             .flatMap { $0.exercises }
@@ -81,18 +90,23 @@ class ProgressTableViewController: UITableViewController {
             self.data.sort(by: self.sortByRecentlyUpdated)
         }
         
+        tableView.backgroundView = emptyLabel
+        // Load your workout data or check if it's empty
+        let isWorkoutDataEmpty = data.isEmpty
+        tableView.backgroundView?.isHidden = isWorkoutDataEmpty ? false : true
+        
         tableView.reloadData()
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        updateUI()
+        updateView()
         
         sortBarButton.menu = demoMenu
 
         NotificationCenter.default.addObserver(self,
-            selector: #selector(handleLogDataChanged),
+            selector: #selector(updateView),
             name: LoggedWorkout.logUpdatedNotification, object: nil
         )
         
@@ -100,17 +114,17 @@ class ProgressTableViewController: UITableViewController {
             selector: #selector(UITableView.reloadData),
             name: WeightType.weightUnitUpdatedNotification, object: nil
         )
-    }
-    
-    @objc func handleLogDataChanged() {
-        print("handleLogDataChanged")
-        updateUI()
+        
+        // Load your workout data or check if it's empty
+        if data.isEmpty {
+            tableView.backgroundView = emptyLabel
+        }
     }
     
     // MARK: - Table view data source
 
     override func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
+        return data.isEmpty ? 0 : 1
     }
 
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {

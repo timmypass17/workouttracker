@@ -20,12 +20,21 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             return false
         }
     }
+    
+    var emptyLabel: UILabel {
+        let label = UILabel()
+        label.text = "Your workout data will appear here."
+        label.textAlignment = .center
+        label.textColor = .secondaryLabel
+        label.font = UIFont.systemFont(ofSize: 18)
+        return label
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        NotificationCenter.default.addObserver(tableView!,
-            selector: #selector(UITableView.reloadData),
+        NotificationCenter.default.addObserver(self,
+            selector: #selector(updateView),
             name: LoggedWorkout.logUpdatedNotification, object: nil
         )
         
@@ -38,6 +47,17 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             selector: #selector(UITableView.reloadData),
             name: AccentColor.accentColorUpdatedNotification, object: nil
         )
+        
+        updateView()
+    }
+    
+    @objc func updateView() {
+        tableView.backgroundView = emptyLabel
+        // Load your workout data or check if it's empty
+        let isWorkoutDataEmpty = LoggedWorkout.shared.loggedWorkoutsBySection.isEmpty
+        tableView.backgroundView?.isHidden = isWorkoutDataEmpty ? false : true
+        
+        tableView.reloadData()
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -86,7 +106,6 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
             if LoggedWorkout.shared.loggedWorkoutsBySection[month]!.isEmpty {
                 print("Removing month")
                 LoggedWorkout.shared.loggedWorkoutsBySection[month] = nil
-//                sortedMonths.removeAll(where: { $0 == month })
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
             }
             
@@ -107,7 +126,6 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
     }
     
     @IBAction func unwindToLoggedWorkoutTableView(segue: UIStoryboardSegue) {
-        print("unwindToLoggedWorkoutTableView")
         // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
         guard segue.identifier == "updateUnwind",
               let sourceViewController = segue.source as? AddEditWorkoutTableViewController,
