@@ -41,6 +41,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Could've used states/enums
         if let workout = workout, isLogged {
             // Handle logged workout
             exercises = workout.exercises
@@ -50,7 +51,6 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             let dateFormatter = DateFormatter()
             dateFormatter.dateFormat = "MMM d, yyyy"
 
-            let date = Date() // Replace this with your actual date
             let formattedDate = dateFormatter.string(from: workout.startTime!)
             
             finishButton.setTitle("Update Log at \(formattedDate)", for: .normal)
@@ -110,7 +110,7 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
             // Update existing workout
             let titleCell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
             let title = titleCell.titleTextField.text!
-            var exercises = exercises.filter { !$0.name.isEmpty || !$0.sets.isEmpty || !$0.reps.isEmpty || !$0.weight.isEmpty } // remove empty cells
+            let exercises = exercises.filter { !$0.name.isEmpty || !$0.sets.isEmpty || !$0.reps.isEmpty || !$0.weight.isEmpty } // remove empty cells
             
             let workout = Workout(id: workout.id, name: title, exercises: exercises)
             
@@ -119,6 +119,11 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     }
     
     @objc func saveAction(sender: UIButton!) {
+        guard isExercisesValid() else {
+            showInputErrorAlert()
+            return
+        }
+        
         performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
     }
 
@@ -240,6 +245,11 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     }
     
     @objc func updateButtonTapped(_ sender: UIButton) {
+        guard isExercisesValid() else {
+            showInputErrorAlert()
+            return
+        }
+        
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
         let updatedWorkout = Workout(id: workout!.id, name: name, exercises: exercises, startTime: workout!.startTime, endTime: workout!.endTime)
@@ -260,17 +270,14 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     }
     
     @objc func finishButtonTapped(_ sender: UIButton) {
+        guard isExercisesValid() else {
+            showInputErrorAlert()
+            return
+        }
+
         let cell = tableView.cellForRow(at: titleTextFieldIndexPath) as! WorkoutTitleTableViewCell
         let name = cell.titleTextField.text!
         let workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
-        
-//        // For debugging
-//        var workoutToSave = Workout(name: name, exercises: exercises, startTime: startTime, endTime: Date())
-//        workoutToSave.startTime = Calendar.current.date(byAdding: .month, value: -1, to: startTime!)
-//
-//        for i in workoutToSave.exercises.indices {
-//            workoutToSave.exercises[i].date = Calendar.current.date(byAdding: .month, value: -1, to: workoutToSave.exercises[i].date!)
-//        }
         
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
@@ -323,5 +330,26 @@ class AddEditWorkoutTableViewController: UITableViewController, ExerciseTableVie
     
     func workoutTitleTableViewCell(_ cell: WorkoutTitleTableViewCell, didUpdateTitle title: String) {
         saveButtonItem?.isEnabled = !title.isEmpty
+    }
+    
+    func isExercisesValid() -> Bool {
+        let formatter = NumberFormatter()
+        formatter.locale = Locale.current
+        formatter.numberStyle = .decimal
+        
+        func isStringANumber(_ input: String) -> Bool {
+            return formatter.number(from: input) != nil
+        }
+        
+        return exercises.allSatisfy { exercise in
+            isStringANumber(exercise.sets) && isStringANumber(exercise.reps) && isStringANumber(exercise.weight)
+        }
+    }
+    
+    func showInputErrorAlert() {
+        let alert = UIAlertController(title: "Invalid Input", message: "Please enter numeric values for sets, reps, and weight. Only numbers and decimal numbers are accepted in these fields. (Ex. \"135\" or \"135.5\")", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+        self.present(alert, animated: true, completion: nil)
     }
 }

@@ -13,11 +13,11 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
     
     @IBOutlet var weightTypeLabel: UILabel!
     @IBOutlet var themeLabel: UILabel!
-//    @IBOutlet var brushImageView: UIImageView!
     @IBOutlet var colorLabel: UILabel!
     
     let contactUsIndexPath = IndexPath(row: 0, section: 2)
     let bugReportIndexPath = IndexPath(row: 1, section: 2)
+    let email = "swiftliftapp@gmail.com"
 
     enum Section: Int, CaseIterable {
         case units
@@ -83,26 +83,26 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         if indexPath == contactUsIndexPath {
             guard MFMailComposeViewController.canSendMail() else {
-                // Disable button or show error message
-                print("Can not send mail")
+                showMailErrorAlert()
                 return
             }
             
             let mailComposer = MFMailComposeViewController()
             mailComposer.mailComposeDelegate = self
-            mailComposer.setToRecipients(["timmypass17@gmail.com"]) // change to support email
+            mailComposer.setToRecipients([email]) // change to support email
             mailComposer.setSubject("Contact Us")
             
             present(mailComposer, animated: true)
         } else if indexPath == bugReportIndexPath {
             guard MFMailComposeViewController.canSendMail() else {
+                showMailErrorAlert()
                 return
             }
             
             let mailComposer = MFMailComposeViewController()
             mailComposer.mailComposeDelegate = self
             
-            mailComposer.setToRecipients(["timmypass17@gmail.com"]) // change to support email
+            mailComposer.setToRecipients([email]) // change to support email
             mailComposer.setSubject("Bug Report")
             
             present(mailComposer, animated: true)
@@ -120,4 +120,10 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         updateView()
     }
     
+    func showMailErrorAlert() {
+        let alert = UIAlertController(title: "No Email Account Found", message: "There is no email account associated to this device. If you have any questions, please feel free to reach out to us at \(email)", preferredStyle: .alert)
+        
+        alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
+        self.present(alert, animated: true, completion: nil)
+    }
 }

@@ -102,7 +102,6 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     
     // User pressed "save" from modal screen
     @IBAction func unwindToWorkoutTableView(segue: UIStoryboardSegue) {
-        print("unwindToWorkoutTableView")
         // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
         guard segue.identifier == "saveUnwind",
               let sourceViewController = segue.source as? AddEditWorkoutTableViewController,
