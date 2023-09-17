@@ -23,7 +23,8 @@ class ExerciseTableViewCell: UITableViewCell {
     
     weak var delegate: ExerciseTableViewCellDelegate?
     let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium) // Choose a haptic feedback style
-
+    var exercise: Exercise!
+    
     var toolbar: UIToolbar = {
         let toolbar = UIToolbar()
         toolbar.sizeToFit()
@@ -58,24 +59,24 @@ class ExerciseTableViewCell: UITableViewCell {
     
     @IBAction func textEditingChanged(_ sender: Any) {
         // Update the exercise with the new values
-        let name = nameTextField.text ?? ""
-        let sets = setsTextField.text ?? ""
-        let reps = repsTextField.text ?? ""
-        let weight = weightTextField.text ?? ""
-        let isComplete = isCompleteButton.isSelected
-        var exercise = Exercise(name: name, sets: sets, reps: reps, weight: "", isComplete: isComplete)
-        exercise.setWeight(weight: weight)
+        exercise.name = nameTextField.text ?? ""
+        exercise.sets = setsTextField.text ?? ""
+        exercise.reps = repsTextField.text ?? ""
+        exercise.weight = weightTextField.text ?? ""
+        exercise.isComplete = isCompleteButton.isSelected
+//        // TODO: Exercise is setting new id and date
+//        var exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isComplete)
+        
+        // TODO: What is this?
+        exercise.setWeight(weight: weightTextField.text ?? "")
         
         // Notify the delegate that the exercise was updated
         delegate?.exerciseCell(self, didUpdateExercise: exercise)
     }
     
-    @IBAction func completeButtonTapped(_ sender: UIButton) {
-        feedbackGenerator.impactOccurred()
-        delegate?.checkmarkTapped(sender: self)
-    }
     
     func update(with exercise: Exercise) {
+        self.exercise = exercise
         nameTextField.text = exercise.name
         setsTextField.text = "\(exercise.sets)"
         repsTextField.text = "\(exercise.reps)"
@@ -86,11 +87,15 @@ class ExerciseTableViewCell: UITableViewCell {
         isCompleteButton.isEnabled = !exercise.isEditing  // Enable or disable the button based on the isEditing property
     }
     
+    @IBAction func completeButtonTapped(_ sender: UIButton) {
+        feedbackGenerator.impactOccurred()
+        delegate?.checkmarkTapped(sender: self)
+    }
+    
     @objc func doneButtonTapped(){
         if let activeTextField = [nameTextField, setsTextField, repsTextField, weightTextField].first(where: { $0.isFirstResponder }) {
             activeTextField.resignFirstResponder()
         }
     }
-
 }
 

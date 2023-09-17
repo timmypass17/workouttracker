@@ -72,4 +72,5 @@ extension Exercise {
         Exercise(name: "Lunges", sets: "4", reps: "12", weight: "45"),
         Exercise(name: "Goblet Squat (Dumbell)", sets: "4", reps: "12", weight: "55")
     ]
+    
 }

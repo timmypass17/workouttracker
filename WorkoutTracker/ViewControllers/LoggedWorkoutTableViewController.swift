@@ -7,7 +7,7 @@
 
 import UIKit
 
-class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
+class LoggedWorkoutTableViewController: UITableViewController {
         
     var sortedMonths: [String]  {
         let dateFormatter = DateFormatter()
@@ -89,10 +89,10 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
         let indexPath = tableView.indexPath(for: cell)!
 
         let month = sortedMonths[indexPath.section]
-        let workout = LoggedWorkout.shared.loggedWorkoutsBySection[month]![indexPath.row]
+        let workoutLog = LoggedWorkout.shared.loggedWorkoutsBySection[month]![indexPath.row]
         tableView.deselectRow(at: indexPath, animated: true)
-        let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, workout: workout, isLogged: true)
-        addEditWorkoutTableViewController?.delegate = self
+        let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, state: .log(workoutLog))
+//        addEditWorkoutTableViewController?.delegate = self
         return addEditWorkoutTableViewController
     }
     
@@ -128,17 +128,16 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
     @IBAction func unwindToLoggedWorkoutTableView(segue: UIStoryboardSegue) {
         // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
         guard segue.identifier == "updateUnwind",
-              let sourceViewController = segue.source as? AddEditWorkoutTableViewController,
-              let workout = sourceViewController.workout else {
+              let sourceViewController = segue.source as? AddEditWorkoutTableViewController else {
             return
         }
-
+        
+        let workout = sourceViewController.workout
         let dateFormatter = DateFormatter()
         dateFormatter.dateFormat = "MMMM yyyy"
         let sectionKey = dateFormatter.string(from: workout.startTime!) // "August 2023"
         
         if let indexOfExistingWorkout = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]?.firstIndex(of: workout) {
-            print(workout)
             LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![indexOfExistingWorkout] = workout
             tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
         }
@@ -148,7 +147,7 @@ class LoggedWorkoutTableViewController: UITableViewController, AddEditWorkoutTab
 //        return 50.0 // Adjust the header height as needed
 //    }
     
-    func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout) {
+    func addEditWorkoutViewController(_ sender: AddEditWorkoutTableViewController, didUpdateWorkout: Workout) {
         // Do nothing. Updates shouldn't happen automatically when viewing logs. User should explicity press "save" to update log
     }
     

@@ -28,7 +28,7 @@ struct LoggedWorkout {
     
     static func saveWorkoutLogs(_ workouts: [String: [Workout]]) {
         let propertyListEncoder = PropertyListEncoder()
-        let codedToDos = try? propertyListEncoder.encode(workouts)
-        try? codedToDos?.write(to: LoggedWorkout.archiveURL, options: .noFileProtection)
+        let encodedWorkoutLogs = try? propertyListEncoder.encode(workouts)
+        try? encodedWorkoutLogs?.write(to: LoggedWorkout.archiveURL, options: .noFileProtection)
     }
 }

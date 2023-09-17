@@ -8,7 +8,6 @@
 import UIKit
 
 class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
-    
     var workouts: [Workout] = []
     
     var emptyLabel: UILabel {
@@ -23,7 +22,6 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         if let savedWorkouts = Workout.loadWorkouts() {
             workouts = savedWorkouts
         } else {
@@ -49,16 +47,9 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // Step 1: Dequeue cell
         let cell = tableView.dequeueReusableCell(withIdentifier: "WorkoutCell", for: indexPath) as! WorkoutTableViewCell
-        
-        // Step 2: Fetch model object to display
         let workout = workouts[indexPath.row]
-
-        // Step 3: Configure cell
         cell.update(with: workout)
-        
-        // Step 4: Return cell
         return cell
     }
     
@@ -74,66 +65,55 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     }
     
     // MARK: - Naviation methods
+    
+    @IBSegueAction func showNewWorkout(_ coder: NSCoder) -> AddEditWorkoutTableViewController? {
+        // Note: Separated addWorkout and showWorkoutDetail because i want to show one modally and the other as a detail
+        // Make sure you drag correct segue (the one between the nav controller and new workout vc) or else u get error
+        return AddEditWorkoutTableViewController(coder: coder, state: .new)
+    }
 
-    @IBSegueAction func addWorkout(_ coder: NSCoder, sender: Any?) -> AddEditWorkoutTableViewController? {
-        // Initalize AddEditWorkoutTableViewController with workout
-        if let cell = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) {
-            // TODO: Remove later?
-            // Editing existing workout
-            let workoutToEdit = workouts[indexPath.row]
-            tableView.deselectRow(at: indexPath, animated: true)
-            return AddEditWorkoutTableViewController(coder: coder, workout: workoutToEdit)
-        } else {
-            // Adding new workout
-            return AddEditWorkoutTableViewController(coder: coder, workout: nil)
-        }
-    }
-    
     @IBSegueAction func showWorkoutDetail(_ coder: NSCoder, sender: Any?) -> AddEditWorkoutTableViewController? {
-        let cell = sender as! UITableViewCell
-        let indexPath = tableView.indexPath(for: cell)!
-        
-        let workoutToEdit = workouts[indexPath.row]
-        tableView.deselectRow(at: indexPath, animated: true)
-        let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, workout: workoutToEdit)
-        addEditWorkoutTableViewController?.delegate = self
-        return addEditWorkoutTableViewController
+        if let cell = sender as? UITableViewCell, let indexPath = tableView.indexPath(for: cell) {
+            let workout = workouts[indexPath.row]
+            tableView.deselectRow(at: indexPath, animated: true)
+            let addEditWorkoutTableViewController = AddEditWorkoutTableViewController(coder: coder, state: .add(workout))
+            addEditWorkoutTableViewController?.delegate = self
+            return addEditWorkoutTableViewController
+        }
+        return nil
     }
     
-    // User pressed "save" from modal screen
+    // User pressed "save" from newWorkout screen
     @IBAction func unwindToWorkoutTableView(segue: UIStoryboardSegue) {
         // Capture the new or updated workout from the AddEditWorkoutTableViewController and save it to the workouts property
         guard segue.identifier == "saveUnwind",
-              let sourceViewController = segue.source as? AddEditWorkoutTableViewController,
-              let workout = sourceViewController.workout else {
+              let sourceViewController = segue.source as? AddEditWorkoutTableViewController
+        else {
             return
         }
-
-        if let indexOfExistingWorkout = workouts.firstIndex(of: workout) {  // tableView.indexPathForSelectedRow
+        
+        let state = sourceViewController.state
+        let updatedWorkout = sourceViewController.workout
+        
+        // tableView.indexPathForSelectedRow
+        if case .add(let originalWorkout) = state, let indexOfExistingWorkout = workouts.firstIndex(of: originalWorkout) {
             // Edit existing workout
-            workouts[indexOfExistingWorkout] = workout
+            workouts[indexOfExistingWorkout] = updatedWorkout
             tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
-        } else {
+        } else if case .new = state {
             // Add new workout
             let newIndexPath = IndexPath(row: workouts.count, section: 0)
-            workouts.append(workout)
+            workouts.append(updatedWorkout)
             tableView.insertRows(at: [newIndexPath], with: .automatic)
         }
         
-        updateView()
         Workout.saveWorkouts(workouts)
     }
     
-    // User presses "back" run this code. (Doesn't run from dismissing modal)
-    func updateWorkout(sender: AddEditWorkoutTableViewController, workout: Workout) {
+    func addEditWorkoutTableViewController(_ controller: AddEditWorkoutTableViewController, didUpdateWorkout workout: Workout) {
         if let indexOfExistingWorkout = workouts.firstIndex(of: workout) {
             workouts[indexOfExistingWorkout] = workout
             tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
-            Workout.saveWorkouts(workouts)
         }
     }
-    
-    
 }
-
-// Note: Ideally should deselect when user goes from main -> detail so that users can see where they come from and put this in viewdidappear but it doesnt work with modals.
