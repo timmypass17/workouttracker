@@ -18,25 +18,11 @@ class WorkoutTitleTableViewCell: UITableViewCell {
     @IBOutlet var letterImageView: UIImageView!
     
     weak var delegate: WorkoutTitleTableViewCellDelegate?
-
-    var toolbar: UIToolbar = {
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(
-            title: "Done",
-            style: .plain,
-            target: self,
-            action: #selector(doneButtonTapped)
-        )
-        
-        toolbar.items = [.flexibleSpace(), doneButton]
-        return toolbar
-    }()
     
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
+        let toolbar = createToolbar(target: self, action: #selector(doneButtonTapped))
         titleTextField.inputAccessoryView = toolbar
     }
 

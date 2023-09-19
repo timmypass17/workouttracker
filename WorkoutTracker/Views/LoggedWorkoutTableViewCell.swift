@@ -27,11 +27,14 @@ class LoggedWorkoutTableViewCell: UITableViewCell {
     }
     
     func update(with workout: Workout) {
-        weekdayLabel.text = workout.dayOfWeek
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "EEE"
+        weekdayLabel.text = dateFormatter.string(from: workout.startTime!)
         dayLabel.text = "\(Calendar.current.component(.day, from: workout.startTime!))"
         workoutLabel.text = workout.name
         exercisesLabel.text = workout.exercises
-            .map { "\($0.sets)x\($0.reps) \($0.name) - \($0.getWeightString(includeUnits: true))" }.joined(separator: "\n")
+            .map { "\($0.sets)x\($0.reps) \($0.name) - \($0.getWeightString(includeUnits: true))" }
+            .joined(separator: "\n")
         barView.isHidden = !Calendar.current.isDate(workout.startTime!, inSameDayAs: Date())
         barView.backgroundColor = Settings.shared.accentColor.color
     }

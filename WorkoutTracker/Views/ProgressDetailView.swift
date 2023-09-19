@@ -61,20 +61,6 @@ struct ProgressDetailView: View {
             print(filteredData.map { $0.weight })
         }
     }
-    
-    func formatFloat(_ floatValue: Float) -> String {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2 // You can adjust this as needed
-        
-        return formatter.string(from: NSNumber(value: floatValue)) ?? "\(floatValue)"
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        return formatter.string(from: date)
-    }
 }
 
 struct ProgressDetailView_Previews: PreviewProvider {
@@ -113,13 +99,14 @@ struct ProgressTitleView: View {
     var filteredData: [Exercise]
     
     var personalRecordWeight: String {
-        return filteredData.max { Float($0.weight) ?? 0.0 < Float($1.weight) ?? 0.0 }?.weight ?? ""
+        return filteredData
+            .max { Float($0.weight) ?? 0.0 < Float($1.weight) ?? 0.0 }?.weight ?? ""
     }
     
     var dateRangeString: String {
         let startDate = filteredData.last?.date ?? Date()
         let endDate = filteredData.first?.date ?? Date()
-        return "\(formatDate(startDate)) - \(formatDate(endDate))"
+        return "\(formatDateMonthDayYear(startDate)) - \(formatDateMonthDayYear(endDate))"
     }
     
     var body: some View {
@@ -136,12 +123,6 @@ struct ProgressTitleView: View {
         Text(dateRangeString)
             .foregroundColor(.secondary)
             .font(.subheadline)
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        return formatter.string(from: date)
     }
 }
 
@@ -163,7 +144,7 @@ struct ProgressListView: View {
         
         ForEach(Array(filteredData.enumerated()), id: \.offset) { i, exercise in
             
-            Divider()
+//            Divider()
             
             HStack {
                 VStack(alignment: .leading, spacing: 4) {
@@ -171,9 +152,10 @@ struct ProgressListView: View {
                         .font(.headline)
                     
                     //"60lbs 3x5 Sep 20, 2023"
-                    Text("\(filteredData[i].sets)x\(filteredData[i].reps) \(filteredData[i].name) at \(formatDate(filteredData[i].date!))")
+                    Text("\(filteredData[i].sets)x\(filteredData[i].reps) \(filteredData[i].name) at \(formatDateMonthDayYear(filteredData[i].date!))")
                         .font(.subheadline)
                         .foregroundColor(.gray)
+                        .lineLimit(1)
                 }
                 Spacer()
                 
@@ -210,20 +192,6 @@ struct ProgressListView: View {
             .padding(8)
         }
     }
-    
-    func formatFloat(_ floatValue: Float) -> String {
-        let formatter = NumberFormatter()
-        formatter.minimumFractionDigits = 0
-        formatter.maximumFractionDigits = 2 // You can adjust this as needed
-        
-        return formatter.string(from: NSNumber(value: floatValue)) ?? "\(floatValue)"
-    }
-    
-    private func formatDate(_ date: Date) -> String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "MMM d, yyyy"
-        return formatter.string(from: date)
-    }
 }
 
 struct ProgressChartView: View {
@@ -235,7 +203,6 @@ struct ProgressChartView: View {
                      y: .value("Beats Per Minute", Float(exercise.weight)!))
             .symbol(Circle().strokeBorder(lineWidth: 2))
             .symbolSize(CGSize(width: 6, height: 6))
-            //            .foregroundStyle(.pink)
         }
         .chartYScale(domain: .automatic(includesZero: false))
         .frame(height: 300)

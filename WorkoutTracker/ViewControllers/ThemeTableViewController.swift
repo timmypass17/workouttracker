@@ -36,13 +36,8 @@ class ThemeTableViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         content.text = themeType.name
         cell.contentConfiguration = content
-        
-        if themeType == Settings.shared.theme {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
-        
+        cell.accessoryType = themeType == Settings.shared.theme ? .checkmark : .none
+
         return cell
     }
 
@@ -51,7 +46,7 @@ class ThemeTableViewController: UITableViewController {
         let themeType = Theme.allCases[indexPath.row]
         Settings.shared.theme = themeType
         NotificationCenter.default.post(name: Theme.themeUpdatedNotification, object: nil)
-        delegate?.themeTableViewController(self, didSelect: themeType) // pass parameters to Settings...
+        delegate?.themeTableViewController(self, didSelect: themeType)
         tableView.reloadData()
     }
 }

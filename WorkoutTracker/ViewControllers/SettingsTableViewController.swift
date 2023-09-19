@@ -9,7 +9,7 @@ import UIKit
 import SafariServices
 import MessageUI
 
-class SettingsTableViewController: UITableViewController, WeightUnitTableViewControllerDelegate, ThemeTableViewControllerDelegate, AccentColorTableViewControllerDelegate, MFMailComposeViewControllerDelegate {
+class SettingsTableViewController: UITableViewController {
     
     @IBOutlet var weightTypeLabel: UILabel!
     @IBOutlet var themeLabel: UILabel!
@@ -17,19 +17,18 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
     
     let contactUsIndexPath = IndexPath(row: 0, section: 2)
     let bugReportIndexPath = IndexPath(row: 1, section: 2)
-    let email = "swiftliftapp@gmail.com"
+    let email = "swiftliftapp@gmail.com" // TODO: Change email
 
-    enum Section: Int, CaseIterable {
+    private enum Section: Int, CaseIterable {
         case units
         case appearance
         case help
+        case privacy
     }
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        // TODO: Load weight type from user defaults
-        
+                
         updateView()
     }
     
@@ -41,7 +40,7 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         guard let sectionCase = Section(rawValue: section) else { return 0 }
         
         switch sectionCase {
-        case .units:
+        case .units, .privacy:
             return 1
         case .appearance, .help:
             return 2
@@ -69,15 +68,6 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         weightTypeLabel.text = Settings.shared.weightUnit.name
         themeLabel.text = Settings.shared.theme.name
         colorLabel.text = Settings.shared.accentColor.rawValue.capitalized
-//        brushImageView.tintColor = Settings.shared.accentColor.color
-    }
-    
-    func weightUnitTableViewController(_ controller: WeightUnitTableViewController, didSelect weightType: WeightType) {
-        updateView()
-    }
-    
-    func themeTableViewController(_ controller: ThemeTableViewController, didSelect themeType: Theme) {
-        updateView()
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -89,7 +79,7 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
             
             let mailComposer = MFMailComposeViewController()
             mailComposer.mailComposeDelegate = self
-            mailComposer.setToRecipients([email]) // change to support email
+            mailComposer.setToRecipients([email])
             mailComposer.setSubject("Contact Us")
             
             present(mailComposer, animated: true)
@@ -102,13 +92,15 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
             let mailComposer = MFMailComposeViewController()
             mailComposer.mailComposeDelegate = self
             
-            mailComposer.setToRecipients([email]) // change to support email
+            mailComposer.setToRecipients([email])
             mailComposer.setSubject("Bug Report")
             
             present(mailComposer, animated: true)
         }
     }
-    
+}
+
+extension SettingsTableViewController: MFMailComposeViewControllerDelegate {
     func mailComposeController(_ controller: MFMailComposeViewController, didFinishWith result: MFMailComposeResult, error: Error?) {
         dismiss(animated: true)
         if let selectedIndexPath = tableView.indexPathForSelectedRow {
@@ -116,14 +108,31 @@ class SettingsTableViewController: UITableViewController, WeightUnitTableViewCon
         }
     }
     
-    func accentColorTableViewController(_ controller: AccentColorTableViewController, didSelect accentColor: AccentColor) {
-        updateView()
-    }
-    
     func showMailErrorAlert() {
-        let alert = UIAlertController(title: "No Email Account Found", message: "There is no email account associated to this device. If you have any questions, please feel free to reach out to us at \(email)", preferredStyle: .alert)
+        let alert = UIAlertController(
+            title: "No Email Account Found",
+            message: "There is no email account associated to this device. If you have any questions, please feel free to reach out to us at \(email)",
+            preferredStyle: .alert)
         
         alert.addAction(UIAlertAction(title: NSLocalizedString("OK", comment: "Default action"), style: .default, handler: { _ in }))
         self.present(alert, animated: true, completion: nil)
+    }
+}
+
+extension SettingsTableViewController: WeightUnitTableViewControllerDelegate {
+    func weightUnitTableViewController(_ controller: WeightUnitTableViewController, didSelect weightType: WeightType) {
+        updateView()
+    }
+}
+
+extension SettingsTableViewController: ThemeTableViewControllerDelegate {
+    func themeTableViewController(_ controller: ThemeTableViewController, didSelect themeType: Theme) {
+        updateView()
+    }
+}
+
+extension SettingsTableViewController: AccentColorTableViewControllerDelegate {
+    func accentColorTableViewController(_ controller: AccentColorTableViewController, didSelect accentColor: AccentColor) {
+        updateView()
     }
 }

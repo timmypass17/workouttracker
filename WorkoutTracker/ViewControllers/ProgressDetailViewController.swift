@@ -26,7 +26,7 @@ class ProgressDetailViewController: UIViewController {
         
         title = data.name
         
-        let progressDetailView = ProgressDetailView(data: data) // TODO: Use data
+        let progressDetailView = ProgressDetailView(data: data)
         let hostingController = UIHostingController(rootView: progressDetailView)
         
         self.addChild(hostingController)

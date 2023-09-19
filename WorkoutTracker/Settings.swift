@@ -83,12 +83,3 @@ struct Settings {
         }
     }
 }
-
-extension Color {
-    static let ui = Color.UI()
-    
-    struct UI {
-        let green = Color("green")
-        let red = Color("red")
-    }
-}

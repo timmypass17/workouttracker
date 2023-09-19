@@ -10,6 +10,8 @@ import Foundation
 enum WeightType: String, CaseIterable, Codable {
     case lbs, kg
     
+    static let weightUnitUpdatedNotification = Notification.Name("WeightUnit.weightUnitUpdated")
+    
     var name: String {
         switch self {
         case .lbs:
@@ -19,5 +21,4 @@ enum WeightType: String, CaseIterable, Codable {
         }
     }
     
-    static let weightUnitUpdatedNotification = Notification.Name("WeightUnit.weightUnitUpdated")
 }

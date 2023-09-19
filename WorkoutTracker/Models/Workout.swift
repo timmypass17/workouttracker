@@ -12,20 +12,9 @@ struct Workout {
     var id: UUID = UUID()
     var name: String
     var exercises: [Exercise]
-    var icon: UIImage? {
-        return UIImage(systemName: "\(name.first?.lowercased() ?? "p").circle.fill")
-    }
-    
     var startTime: Date?
-    var endTime: Date?
+    var icon: UIImage? { UIImage(systemName: "\(name.first?.lowercased() ?? "p").circle.fill") }
     
-    var dayOfWeek: String? {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "EEE"
-        return dateFormatter.string(from: startTime ?? Date())
-    }
-    
-    // Path to datastore
     // /Documents/
     static let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     // /Documents/workouts.plist

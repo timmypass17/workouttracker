@@ -10,37 +10,18 @@ import Foundation
 struct Exercise: Identifiable {
     var id = UUID()
     var name: String
-    var sets: String    // easier to make string to show empty placeholders for textfields
+    var sets: String
     var reps: String
-    
-    var weight: String // always in lbs
-    var weightFormatted: String {
-        switch Settings.shared.weightUnit {
-        case .lbs:
-            return "\(getWeightString())lbs"
-        case .kg:
-            return "\(getWeightString())kg"
-        }
-    }
-    
+    var weight: String // Note: Weight is always stored in lbs. String is easier to work with empty placeholders for textfields.
     var date: Date?
     
     // Cell properties
     var isComplete: Bool = false
     var isEditing: Bool = false
     
-    mutating func setWeight(weight: String) {
-        switch Settings.shared.weightUnit {
-        case .lbs:
-            self.weight = weight
-        case .kg:
-            // Convert to lb
-            self.weight = String((Float(weight) ?? 0) * 2.20462)
-        }
-    }
-    
     func getWeightString(includeUnits: Bool = false) -> String {
         func formatWeight(_ weight: Float) -> String {
+            // e.g. 44.232582 -> 44.2
             let formatter = NumberFormatter()
             formatter.maximumFractionDigits = 1
             formatter.minimumFractionDigits = 0
@@ -49,18 +30,16 @@ struct Exercise: Identifiable {
         }
         
         let weightValue = Float(weight) ?? 0.0
-        
         switch Settings.shared.weightUnit {
         case .lbs:
             return includeUnits ? "\(formatWeight(weightValue)) lbs" : "\(formatWeight(weightValue))"
         case .kg:
+            // Convert weight to kg if necessary
             let weightInKg = weightValue * 0.45359237
-//            return String(format: includeUnits ? "%.2f kg" : "%.2f", weightInKg)
             return includeUnits ? "\(formatWeight(weightInKg)) kg" : "\(formatWeight(weightInKg))"
 
         }
     }
-    
 }
 
 extension Exercise: Codable { }
@@ -72,5 +51,4 @@ extension Exercise {
         Exercise(name: "Lunges", sets: "4", reps: "12", weight: "45"),
         Exercise(name: "Goblet Squat (Dumbell)", sets: "4", reps: "12", weight: "55")
     ]
-    
 }

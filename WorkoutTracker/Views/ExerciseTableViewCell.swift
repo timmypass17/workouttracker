@@ -22,28 +22,13 @@ class ExerciseTableViewCell: UITableViewCell {
     @IBOutlet var isCompleteButton: UIButton!
     
     weak var delegate: ExerciseTableViewCellDelegate?
-    let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium) // Choose a haptic feedback style
+    let feedbackGenerator = UIImpactFeedbackGenerator(style: .medium)
     var exercise: Exercise!
-    
-    var toolbar: UIToolbar = {
-        let toolbar = UIToolbar()
-        toolbar.sizeToFit()
-        
-        let doneButton = UIBarButtonItem(
-            title: "Done",
-            style: .plain,
-            target: self,
-            action: #selector(doneButtonTapped)
-        )
-        
-        toolbar.items = [.flexibleSpace(), doneButton]
-        return toolbar
-    }()
-    
+
     override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
-        
+        let toolbar = createToolbar(target: self, action: #selector(doneButtonTapped))
         nameTextField.inputAccessoryView = toolbar
         setsTextField.inputAccessoryView = toolbar
         repsTextField.inputAccessoryView = toolbar
@@ -62,13 +47,15 @@ class ExerciseTableViewCell: UITableViewCell {
         exercise.name = nameTextField.text ?? ""
         exercise.sets = setsTextField.text ?? ""
         exercise.reps = repsTextField.text ?? ""
-        exercise.weight = weightTextField.text ?? ""
         exercise.isComplete = isCompleteButton.isSelected
-//        // TODO: Exercise is setting new id and date
-//        var exercise = Exercise(name: name, sets: sets, reps: reps, weight: weight, isComplete: isComplete)
-        
-        // TODO: What is this?
-        exercise.setWeight(weight: weightTextField.text ?? "")
+
+        switch Settings.shared.weightUnit {
+        case .lbs:
+            exercise.weight = weightTextField.text ?? ""
+        case .kg:
+            // Convert to lb
+            exercise.weight = String((Float(weightTextField.text ?? "") ?? 0) * 2.20462)
+        }
         
         // Notify the delegate that the exercise was updated
         delegate?.exerciseCell(self, didUpdateExercise: exercise)
@@ -80,11 +67,9 @@ class ExerciseTableViewCell: UITableViewCell {
         nameTextField.text = exercise.name
         setsTextField.text = "\(exercise.sets)"
         repsTextField.text = "\(exercise.reps)"
-        weightTextField.text = exercise.weight == "" ? "" : "\(exercise.getWeightString())"
+        weightTextField.text = exercise.weight.isEmpty ? "" : "\(exercise.getWeightString())" // show placeholder instead of "0"
+        isCompleteButton.isEnabled = !exercise.isEditing
         selectionStyle = .none  // disable highligh when clicking row
-//        showsReorderControl = true
-        
-        isCompleteButton.isEnabled = !exercise.isEditing  // Enable or disable the button based on the isEditing property
     }
     
     @IBAction func completeButtonTapped(_ sender: UIButton) {
@@ -98,4 +83,3 @@ class ExerciseTableViewCell: UITableViewCell {
         }
     }
 }
-

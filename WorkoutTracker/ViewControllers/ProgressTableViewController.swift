@@ -24,15 +24,6 @@ class ProgressTableViewController: UITableViewController {
     
     var data: [ProgressData] = []
     
-    var emptyLabel: UILabel {
-        let label = UILabel()
-        label.text = "Your workout data will appear here."
-        label.textAlignment = .center
-        label.textColor = .secondaryLabel
-        label.font = UIFont.systemFont(ofSize: 18)
-        return label
-    }
-    
     var sortByWeight: (ProgressData, ProgressData) -> Bool = { exercise, otherExercise in
         let maxWeightExercise = exercise.data.max(by: { $0.weight < $1.weight })?.weight ?? "0"
         let maxWeightOtherExercise = otherExercise.data.max(by: { $0.weight < $1.weight })?.weight ?? "0"
@@ -45,30 +36,30 @@ class ProgressTableViewController: UITableViewController {
         return mostRecentExercise.date! > mostRecentOtherExercise.date!
     }
     
-    var menuItems: [UIAction] {
-        return [
-            UIAction(title: "Alphabetical (A-Z)", image: UIImage(systemName: "a.square.fill")) { _ in
-                // Handle sorting alphabetically
-                self.data.sort { $0.name < $1.name }
-                self.tableView.reloadData()
-                Settings.shared.sortingPreference = .alphabetically
-            },
-            UIAction(title: "Weight", image: UIImage(systemName: "dumbbell")) { _ in
-                // Handle sorting by weight
-                self.data.sort(by: self.sortByWeight)
-                self.tableView.reloadData()
-                Settings.shared.sortingPreference = .weight
-            },
-            UIAction(title: "Recently Updated", image: UIImage(systemName: "clock")) { _ in
-                // Handle sorting by weight
-                self.data.sort(by: self.sortByRecentlyUpdated)
-                self.tableView.reloadData()
-                Settings.shared.sortingPreference = .recent
-            }
-        ]
-    }
 
-    var demoMenu: UIMenu {
+    var sortMenu: UIMenu {
+        var menuItems: [UIAction] {
+            return [
+                UIAction(title: "Alphabetical (A-Z)", image: UIImage(systemName: "a.square.fill")) { _ in
+                    // Handle sorting alphabetically
+                    self.data.sort { $0.name < $1.name }
+                    self.tableView.reloadData()
+                    Settings.shared.sortingPreference = .alphabetically
+                },
+                UIAction(title: "Weight", image: UIImage(systemName: "dumbbell")) { _ in
+                    // Handle sorting by weight
+                    self.data.sort(by: self.sortByWeight)
+                    self.tableView.reloadData()
+                    Settings.shared.sortingPreference = .weight
+                },
+                UIAction(title: "Recently Updated", image: UIImage(systemName: "clock")) { _ in
+                    // Handle sorting by weight
+                    self.data.sort(by: self.sortByRecentlyUpdated)
+                    self.tableView.reloadData()
+                    Settings.shared.sortingPreference = .recent
+                }
+            ]
+        }
         return UIMenu(title: "Sort By", image: nil, identifier: nil, options: [], children: menuItems)
     }
     
@@ -85,16 +76,13 @@ class ProgressTableViewController: UITableViewController {
         case .alphabetically:
             self.data.sort { $0.name < $1.name }
         case .weight:
-            self.data.sort(by: self.sortByWeight)
+            self.data.sort(by: sortByWeight)
         case .recent:
-            self.data.sort(by: self.sortByRecentlyUpdated)
+            self.data.sort(by: sortByRecentlyUpdated)
         }
         
-        tableView.backgroundView = emptyLabel
-        // Load your workout data or check if it's empty
-        let isWorkoutDataEmpty = data.isEmpty
-        tableView.backgroundView?.isHidden = isWorkoutDataEmpty ? false : true
-        
+        tableView.backgroundView = emptyWorkoutDataLabel
+        tableView.backgroundView?.isHidden = data.isEmpty ? false : true
         tableView.reloadData()
     }
     
@@ -103,7 +91,7 @@ class ProgressTableViewController: UITableViewController {
         
         updateView()
         
-        sortBarButton.menu = demoMenu
+        sortBarButton.menu = sortMenu
 
         NotificationCenter.default.addObserver(self,
             selector: #selector(updateView),
@@ -117,7 +105,7 @@ class ProgressTableViewController: UITableViewController {
         
         // Load your workout data or check if it's empty
         if data.isEmpty {
-            tableView.backgroundView = emptyLabel
+            tableView.backgroundView = emptyWorkoutDataLabel
         }
     }
     
@@ -151,7 +139,7 @@ class ProgressTableViewController: UITableViewController {
     @IBSegueAction func showProgressDetail(_ coder: NSCoder, sender: Any?) -> ProgressDetailViewController? {
         let cell = sender as! UITableViewCell
         let indexPath = tableView.indexPath(for: cell)!
-        var progressData = data[indexPath.row]
+        let progressData = data[indexPath.row]
         progressData.data.sort(by: { $0.date! > $1.date! })
         
         // Make a copy of data so that we can change units

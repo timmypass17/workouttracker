@@ -36,12 +36,7 @@ class WeightUnitTableViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         content.text = weightType.name
         cell.contentConfiguration = content
-        
-        if weightType == Settings.shared.weightUnit {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
+        cell.accessoryType = weightType == Settings.shared.weightUnit ? .checkmark : .none
         
         return cell
     }
@@ -50,7 +45,7 @@ class WeightUnitTableViewController: UITableViewController {
         tableView.deselectRow(at: indexPath, animated: true)
         let weightType = WeightType.allCases[indexPath.row]
         Settings.shared.weightUnit = weightType
-        delegate?.weightUnitTableViewController(self, didSelect: weightType) // pass parameters to Settings...
+        delegate?.weightUnitTableViewController(self, didSelect: weightType)
         NotificationCenter.default.post(name: WeightType.weightUnitUpdatedNotification, object: nil)
         tableView.reloadData()
     }

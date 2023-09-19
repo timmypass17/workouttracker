@@ -38,13 +38,8 @@ class AccentColorTableViewController: UITableViewController {
         var content = cell.defaultContentConfiguration()
         content.text = color.rawValue.capitalized
         cell.contentConfiguration = content
-        
-        if color == Settings.shared.accentColor {
-            cell.accessoryType = .checkmark
-        } else {
-            cell.accessoryType = .none
-        }
-        
+        cell.accessoryType = color == Settings.shared.accentColor ? .checkmark : .none
+
         return cell
     }
     
@@ -55,40 +50,5 @@ class AccentColorTableViewController: UITableViewController {
         delegate?.accentColorTableViewController(self, didSelect: color)
         NotificationCenter.default.post(name: AccentColor.accentColorUpdatedNotification, object: nil)
         tableView.reloadData()
-    }
-}
-
-enum AccentColor: String, CaseIterable, Codable {
-    case blue, red, cyan, mint, pink, teal, brown, green, indigo, orange, purple, yellow
-    
-    static let accentColorUpdatedNotification = Notification.Name("AccentColor.accentColorUpdated")
-
-    var color: UIColor {
-        switch self {
-        case .blue:
-            return .systemBlue
-        case .red:
-            return .systemRed
-        case .cyan:
-            return .systemCyan
-        case .mint:
-            return .systemMint
-        case .pink:
-            return .systemPink
-        case .teal:
-            return .systemTeal
-        case .brown:
-            return .systemBrown
-        case .green:
-            return .systemGreen
-        case .indigo:
-            return .systemIndigo
-        case .orange:
-            return .systemOrange
-        case .purple:
-            return .systemPurple
-        case .yellow:
-            return .systemYellow
-        }
     }
 }

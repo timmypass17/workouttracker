@@ -437,6 +437,35 @@
                                     </tableViewCell>
                                 </cells>
                             </tableViewSection>
+                            <tableViewSection headerTitle="Privacy" id="AVD-KB-Vgo">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" accessoryType="disclosureIndicator" indentationWidth="10" textLabel="Li3-Vh-0tv" imageView="Vfx-91-8cU" style="IBUITableViewCellStyleDefault" id="yfg-FA-Z5k">
+                                        <rect key="frame" x="0.0" y="424.33333969116211" width="390" height="43.666667938232422"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="yfg-FA-Z5k" id="Wmk-jS-0hT">
+                                            <rect key="frame" x="0.0" y="0.0" width="359.66666666666669" height="43.666667938232422"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Privacy Policy" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Li3-Vh-0tv">
+                                                    <rect key="frame" x="59" y="0.0" width="292.66666666666669" height="43.666667938232422"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Vfx-91-8cU">
+                                                    <rect key="frame" x="22" y="11.333333333333336" width="20" height="20"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                    <imageReference key="image" image="hand.raised.fill" catalog="system" symbolScale="medium"/>
+                                                </imageView>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <segue destination="LR5-7h-svq" kind="show" id="IOU-o1-RXx"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
                         </sections>
                         <connections>
                             <outlet property="dataSource" destination="yg0-oE-jqB" id="gyt-Tx-rPK"/>
@@ -602,6 +631,53 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FLu-wk-4iy" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4351" y="1520"/>
+        </scene>
+        <!--Privacy-->
+        <scene sceneID="z02-ng-rQR">
+            <objects>
+                <tableViewController id="LR5-7h-svq" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="static" style="insetGrouped" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="18" estimatedSectionHeaderHeight="-1" sectionFooterHeight="18" estimatedSectionFooterHeight="-1" id="Zjg-9Z-be5">
+                        <rect key="frame" x="0.0" y="0.0" width="390" height="844"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <sections>
+                            <tableViewSection headerTitle="Data Privacy" id="CDs-nL-AI8">
+                                <cells>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" id="DQK-p3-7fq">
+                                        <rect key="frame" x="20" y="55.333332061767578" width="350" height="124"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="DQK-p3-7fq" id="GI6-Fp-0yT">
+                                            <rect key="frame" x="0.0" y="0.0" width="350" height="124"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" textAlignment="natural" lineBreakMode="tailTruncation" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NW2-DO-yJD">
+                                                    <rect key="frame" x="20" y="11" width="310" height="102"/>
+                                                    <string key="text">Your workout data is locally stored on your device, ensuring complete privacy. No one else can access or view your data, guaranteeing the confidentiality of your personal fitness data.</string>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="NW2-DO-yJD" firstAttribute="top" secondItem="GI6-Fp-0yT" secondAttribute="topMargin" id="3w7-qN-tyI"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="NW2-DO-yJD" secondAttribute="trailing" id="6YQ-GS-Qye"/>
+                                                <constraint firstItem="NW2-DO-yJD" firstAttribute="leading" secondItem="GI6-Fp-0yT" secondAttribute="leadingMargin" id="iPw-Q4-EuU"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="NW2-DO-yJD" secondAttribute="bottom" id="zCk-dK-07a"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                    </tableViewCell>
+                                </cells>
+                            </tableViewSection>
+                        </sections>
+                        <connections>
+                            <outlet property="dataSource" destination="LR5-7h-svq" id="bMK-ld-XBX"/>
+                            <outlet property="delegate" destination="LR5-7h-svq" id="yvf-5H-Wp4"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="Privacy" largeTitleDisplayMode="never" id="onv-r5-CQP"/>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="536-M3-pbm" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5271" y="1520"/>
         </scene>
         <!--New Workout-->
         <scene sceneID="Lnr-oY-YVc">
@@ -819,6 +895,7 @@
         <image name="circle" catalog="system" width="128" height="123"/>
         <image name="dumbbell.fill" catalog="system" width="128" height="72"/>
         <image name="gearshape.fill" catalog="system" width="128" height="123"/>
+        <image name="hand.raised.fill" catalog="system" width="128" height="128"/>
         <image name="l.circle.fill" catalog="system" width="128" height="123"/>
         <image name="ladybug.fill" catalog="system" width="128" height="122"/>
         <image name="line.3.horizontal.decrease" catalog="system" width="128" height="73"/>

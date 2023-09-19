@@ -8,16 +8,14 @@
 import Foundation
 
 struct LoggedWorkout {
-    static var shared = LoggedWorkout() // make this static so that we can easily update logged workout from another unrelated screen such as workout details
+    // make this static so that we can easily update logged workout from another unrelated screen such as workout details
+    static var shared = LoggedWorkout()
+    
+    var loggedWorkoutsBySection: [String: [Workout]] = loadWorkoutLogs() ?? [:]
+    
     static let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
     static let archiveURL = documentsDirectory.appending(path: "logs").appendingPathExtension("plist")
     static let logUpdatedNotification = Notification.Name("LoggedWorkout.logUpdated")
-    static let logAddedNotification = Notification.Name("LoggedWorkout.logAdded")
-    static let logRemovedNotification = Notification.Name("LoggedWorkout.logRemoved")
-
-    
-    var loggedWorkoutsBySection: [String: [Workout]] = loadWorkoutLogs() ?? [:]
-        
     
     // TODO: Maybe make these methods generic
     static func loadWorkoutLogs() -> [String: [Workout]]? {

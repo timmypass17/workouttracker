@@ -10,11 +10,12 @@ import Foundation
 enum Theme: String, CaseIterable, Codable {
     case automatic, light, dark
     
+    static let themeUpdatedNotification = Notification.Name("Theme.themeUpdatedNotification")
+    
     var name: String {
         return rawValue.capitalized
     }
     
-    static let themeUpdatedNotification = Notification.Name("Theme.themeUpdatedNotification")
 }
 
 

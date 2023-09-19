@@ -26,6 +26,15 @@ class AddEditWorkoutTableViewController: UITableViewController {
     var saveButton: UIBarButtonItem?
     weak var delegate: AddEditWorkoutTableViewControllerDelegate?
     
+    var workoutLogs: [String: [Workout]] {
+        get {
+            return LoggedWorkout.shared.loggedWorkoutsBySection
+        }
+        set {
+            LoggedWorkout.shared.loggedWorkoutsBySection = newValue
+        }
+    }
+    
     init?(coder: NSCoder, state: WorkoutState) {
         self.state = state
         switch state {
@@ -45,7 +54,9 @@ class AddEditWorkoutTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         updateView()
+        
         NotificationCenter.default.addObserver(tableView!,
             selector: #selector(UITableView.reloadData),
             name: WeightType.weightUnitUpdatedNotification, object: nil
@@ -110,8 +121,20 @@ class AddEditWorkoutTableViewController: UITableViewController {
         workout.exercises.insert(movedExercise, at: destinationIndexPath.row)
     }
     
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        
+        // Set the isEditing property for each exercise based on the editing state
+        for i in 0..<workout.exercises.count {
+            workout.exercises[i].isEditing = editing
+        }
+
+        // Reload the table view to update the button's state
+        tableView.reloadData()
+    }
+    
     override func tableView(_ tableView: UITableView, targetIndexPathForMoveFromRowAt sourceIndexPath: IndexPath, toProposedIndexPath proposedDestinationIndexPath: IndexPath) -> IndexPath {
-        // Limit reordering to only it's own section
+        // Limit reordering to only it's own section (i.e. Don't reorder title row)
         if sourceIndexPath.section != proposedDestinationIndexPath.section {
             var row = 0
             if sourceIndexPath.section < proposedDestinationIndexPath.section {
@@ -127,23 +150,11 @@ class AddEditWorkoutTableViewController: UITableViewController {
 
         if self.isMovingFromParent {
             if case .add(let originalWorkout) = state {
-                // Update any changes to workout (if from workout detail), when user presses "back"
-                let updatedWorkout = Workout(id: originalWorkout.id, name: workout.name, exercises: workout.exercises, startTime: workout.startTime, endTime: workout.endTime)
+                // Update any changes to workout that user typed (if from workout detail), when user presses "back"
+                let updatedWorkout = Workout(id: originalWorkout.id, name: workout.name, exercises: workout.exercises, startTime: workout.startTime)
                 delegate?.addEditWorkoutTableViewController(self, didUpdateWorkout: updatedWorkout)
             }
         }
-    }
-    
-    override func setEditing(_ editing: Bool, animated: Bool) {
-        super.setEditing(editing, animated: animated)
-        
-        // Set the isEditing property for each exercise based on the editing state
-        for i in 0..<workout.exercises.count {
-            workout.exercises[i].isEditing = editing
-        }
-
-        // Reload the table view to update the button's state
-        tableView.reloadData()
     }
     
     func updateView() {
@@ -192,23 +203,15 @@ class AddEditWorkoutTableViewController: UITableViewController {
         // Handle logged workout
         title = workout.name
         self.navigationItem.rightBarButtonItem = editButtonItem
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMM d, yyyy"
-
-        let formattedDate = dateFormatter.string(from: workout.startTime!)
-        
-        finishButton.setTitle("Update Log at \(formattedDate)", for: .normal)
+        finishButton.setTitle("Update Log at \(formatDateMonthDayYear( workout.startTime!))", for: .normal)
         finishButton.addTarget(self, action: #selector(updateButtonTapped(_:)), for: .touchUpInside)
         finishButton.isEnabled = true
     }
     
     // MARK: Button actions
     
-    
     @objc func saveButtonTapped(sender: UIButton!) {
-        guard isExercisesValid() else { showInputErrorAlert(); return }
-        
+        guard isExercisesInputValid() else { showInputErrorAlert(); return }
         performSegue(withIdentifier: "saveUnwind", sender: nil) // calls prepare()
     }
 
@@ -220,28 +223,21 @@ class AddEditWorkoutTableViewController: UITableViewController {
     @IBAction func addExerciseButtonTapped(_ sender: Any) {
         workout.exercises.append(Exercise(name: "", sets: "", reps: "", weight: "", date: Date()))
         let indexPath = IndexPath(row: workout.exercises.count - 1, section: 1)
-        
         tableView.beginUpdates()
         tableView.insertRows(at: [indexPath], with: .automatic)
         tableView.endUpdates()
-        
         updateFinishButtonState()
     }
     
     @objc func updateButtonTapped(_ sender: UIButton) {
-        guard isExercisesValid() else {
-            showInputErrorAlert()
-            return
-        }
-        
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM yyyy"
-        let sectionKey = dateFormatter.string(from: workout.startTime!) // "August 2023"
+        guard isExercisesInputValid() else { showInputErrorAlert(); return }
+
+        let sectionKey = formatDateMonthYear(workout.startTime!) // "August 2023"
 
         // Update existing workout
-        if let index = LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]?.firstIndex(where: { $0.id == workout.id }) {
-            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]![index] = workout
-            LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
+        if let index = workoutLogs[sectionKey]?.firstIndex(where: { $0.id == workout.id }) {
+            workoutLogs[sectionKey]![index] = workout
+            LoggedWorkout.saveWorkoutLogs(workoutLogs)
             NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
         }
         
@@ -249,18 +245,12 @@ class AddEditWorkoutTableViewController: UITableViewController {
     }
     
     @objc func finishWorkoutButtonTapped(_ sender: UIButton) {
-        guard isExercisesValid() else { showInputErrorAlert(); return }
+        guard isExercisesInputValid() else { showInputErrorAlert(); return }
         
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "MMMM yyyy"
-        let sectionKey = dateFormatter.string(from: workout.startTime!) // "August 2023"
+        let sectionKey = formatDateMonthYear(workout.startTime!) // "August 2023"
         
-        if LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] == nil {
-            LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey] = []
-        }
-        LoggedWorkout.shared.loggedWorkoutsBySection[sectionKey]!.insert(workout, at: 0)
-        
-        LoggedWorkout.saveWorkoutLogs(LoggedWorkout.shared.loggedWorkoutsBySection)
+        workoutLogs[sectionKey, default: []].insert(workout, at: 0)
+        LoggedWorkout.saveWorkoutLogs(workoutLogs)
         
         Settings.shared.logBadgeValue += 1
         NotificationCenter.default.post(name: LoggedWorkout.logUpdatedNotification, object: nil)
@@ -274,10 +264,10 @@ class AddEditWorkoutTableViewController: UITableViewController {
     func updateFinishButtonState() {
         finishButton.isEnabled = workout.exercises.allSatisfy {
             $0.isComplete == true && !$0.name.isEmpty && !$0.sets.isEmpty && !$0.reps.isEmpty && !$0.weight.isEmpty
-        }
+        } && !workout.name.isEmpty
     }
     
-    func isExercisesValid() -> Bool {
+    func isExercisesInputValid() -> Bool {
         let formatter = NumberFormatter()
         formatter.locale = Locale.current
         formatter.numberStyle = .decimal
@@ -325,6 +315,6 @@ extension AddEditWorkoutTableViewController: ExerciseTableViewCellDelegate {
 extension AddEditWorkoutTableViewController: WorkoutTitleTableViewCellDelegate {
     func workoutTitleTableViewCell(_ cell: WorkoutTitleTableViewCell, didUpdateTitle title: String) {
         workout.name = title
-        saveButton?.isEnabled = !title.isEmpty
+        updateFinishButtonState()
     }
 }

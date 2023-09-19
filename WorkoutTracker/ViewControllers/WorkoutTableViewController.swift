@@ -7,18 +7,8 @@
 
 import UIKit
 
-class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableViewControllerDelegate {
+class WorkoutTableViewController: UITableViewController {
     var workouts: [Workout] = []
-    
-    var emptyLabel: UILabel {
-        let label = UILabel()
-        label.text = "Your workout data will appear here.\nTap the '+' button to add your first workout."
-        label.textAlignment = .center
-        label.textColor = .secondaryLabel
-        label.font = UIFont.systemFont(ofSize: 18)
-        label.numberOfLines = 0
-        return label
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,7 +22,7 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
     }
     
     func updateView() {
-        tableView.backgroundView = emptyLabel
+        tableView.backgroundView = emptyWorkoutDataLabel
         tableView.backgroundView?.isHidden = workouts.isEmpty ? false : true
     }
     
@@ -109,11 +99,14 @@ class WorkoutTableViewController: UITableViewController, AddEditWorkoutTableView
         
         Workout.saveWorkouts(workouts)
     }
-    
+}
+
+extension WorkoutTableViewController: AddEditWorkoutTableViewControllerDelegate {
     func addEditWorkoutTableViewController(_ controller: AddEditWorkoutTableViewController, didUpdateWorkout workout: Workout) {
         if let indexOfExistingWorkout = workouts.firstIndex(of: workout) {
             workouts[indexOfExistingWorkout] = workout
             tableView.reloadRows(at: [IndexPath(row: indexOfExistingWorkout, section: 0)], with: .automatic)
+            Workout.saveWorkouts(workouts)
         }
     }
 }
