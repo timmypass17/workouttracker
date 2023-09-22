@@ -96,13 +96,16 @@ class LoggedWorkoutTableViewController: UITableViewController {
         if editingStyle == .delete {
             let month = sortedMonths[indexPath.section]
             workoutLogs[month]?.remove(at: indexPath.row)
-            tableView.deleteRows(at: [indexPath], with: .automatic)
             
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+
             if workoutLogs[month]!.isEmpty {
                 workoutLogs[month] = nil
                 tableView.deleteSections(IndexSet(integer: indexPath.section), with: .automatic)
+            } else {
+                tableView.reloadSections(IndexSet(integer: indexPath.section), with: .automatic)
             }
-            
+                        
             LoggedWorkout.saveWorkoutLogs(workoutLogs)
         }
     }
